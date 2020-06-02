@@ -6,6 +6,8 @@
 #include<Windows.h>
 
 #define ARRSIZE 4
+#define MAXSCORE 131072 
+// 3*3 = 1,024 / 4*4 = 131,072 / 5*5 = 67,108,864(65,536) / 6*6 이상은 숫자가 너무 큼
 enum MovePos { rightMove = 1, leftMove = 1, upMove = 1, downMove = 1 };
 
 
@@ -20,7 +22,7 @@ int main()
 	int mapArr[ARRSIZE][ARRSIZE] = { 0 };
 
 	int check = 0;
-/*	while (1)
+	while (1)
 	{
 		check++;
 		posX = rand() % ARRSIZE;
@@ -43,7 +45,7 @@ int main()
 		if (check > 1)
 			break;
 	}
-	*/
+	
 	mapArr[0][0] = 2;
 	mapArr[1][0] = 2;
 	mapArr[2][0] = 2;
@@ -111,6 +113,11 @@ int main()
 						}
 					}
 				}
+				for (int i = 0; i < ARRSIZE; i++)
+				{
+					mapArr[i][posX] = abs(mapArr[i][posX]);
+				}
+				PrintArr(mapArr);
 			} // for()
 			break;
 
@@ -142,12 +149,19 @@ int main()
 						}
 					}
 				}
+				for (int i = 0; i < ARRSIZE; i++)
+				{
+					mapArr[i][posX] = abs(mapArr[i][posX]);
+				}
+				PrintArr(mapArr);
 			} // for()
 
 			break;
 
 		case 75:
 			printf("left\n");
+
+
 			break;
 
 		case 77:
@@ -181,12 +195,18 @@ int main()
 
 void PrintArr(int (*mapArr)[ARRSIZE])
 {
+	// mapArr[3][3] = 1048;
+	Sleep(250);
+	system("cls");
 	for (int i = 0; i < ARRSIZE; i++)
 	{
+		puts(" ------- ------- ------- -------");
+		puts("|       |       |       |       | ");
 		for (int j = 0; j < ARRSIZE; j++)
 		{
-			printf("%d ", mapArr[i][j]);
+			printf("| %5d ", mapArr[i][j]);
 		}
-		puts("");
+		puts("|\n|       |       |       |       |");
 	}
+	puts(" ------- ------- ------- -------");
 }
