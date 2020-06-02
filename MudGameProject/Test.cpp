@@ -2,16 +2,15 @@
 #include<conio.h>	// _getch()
 #include<time.h>
 #include<stdlib.h>
-
 #include<Windows.h>
 
 #define ARRSIZE 4
-#define MAXSCORE 131072 
+#define MAXNUM 131072 
 // 3*3 = 1,024 / 4*4 = 131,072 / 5*5 = 67,108,864(65,536) / 6*6 이상은 숫자가 너무 큼
 enum MovePos { rightMove = 1, leftMove = 1, upMove = 1, downMove = 1 };
 
 
-void PrintArr(int(*mapArr)[ARRSIZE]);
+void PrintArr(int(*mapArr)[ARRSIZE], char *string);
 
 int main()
 {
@@ -55,7 +54,7 @@ int main()
 
 	mapArr[3][2] = 2;
 	mapArr[3][3] = 2;
-	PrintArr(mapArr);
+	PrintArr(mapArr,"Start");
 	
 	// 키 입력 구분
 	// 방향키는 2바이트기 때문에 리턴값이 두번
@@ -88,7 +87,8 @@ int main()
 				}
 			}*/
 
-			for (int posX = 0; posX < ARRSIZE; posX++)
+			// 게임오버 조건 추가
+			for (int posX = 0; posX < ARRSIZE; posX++) // UP, LEFT
 			{
 				for (int posY = 0; posY < ARRSIZE; posY++)
 				{
@@ -117,14 +117,15 @@ int main()
 				{
 					mapArr[i][posX] = abs(mapArr[i][posX]);
 				}
-				PrintArr(mapArr);
+				PrintArr(mapArr,"UpMove");
 			} // for()
 			break;
 
 		case 80:
 			printf("down\n");
 
-			for (int posX = 0; posX < ARRSIZE; posX++)
+			// 게임오버 조건 추가	
+			for (int posX = 0; posX < ARRSIZE; posX++)	// DOWN, RIGHT
 			{
 				for (int posY = ARRSIZE; posY >= 0; posY--)
 				{
@@ -153,7 +154,7 @@ int main()
 				{
 					mapArr[i][posX] = abs(mapArr[i][posX]);
 				}
-				PrintArr(mapArr);
+				PrintArr(mapArr,"DownMove");
 			} // for()
 
 			break;
@@ -161,11 +162,78 @@ int main()
 		case 75:
 			printf("left\n");
 
+			// 게임오버 조건 추가
+			for (int posY = 0; posY < ARRSIZE; posY++)
+			{
+				for (int posX = 0; posX < ARRSIZE; posX++)
+				{
+					if (posX == 0)
+						continue;
+
+					if (mapArr[posY][posX] != 0)	// 값이 있는 경우
+					{
+						if (mapArr[posY][posX - leftMove] == 0)	// 앞 칸이 비었을 경우
+						{
+							mapArr[posY][posX - leftMove] = mapArr[posY][posX];
+							mapArr[posY][posX] = 0;
+							posX = 0;
+							continue;
+						}
+						else if (mapArr[posY][posX - leftMove] == mapArr[posY][posX])	// 앞 칸의 숫자와 현재 칸의 숫자가 같을 경우
+						{
+							mapArr[posY][posX - leftMove] = -(2 * mapArr[posY][posX]);
+							mapArr[posY][posX] = 0;
+							posX--;
+							continue;
+						}
+					}
+				}
+				for (int i = 0; i < ARRSIZE; i++)
+				{
+					mapArr[posY][i] = abs(mapArr[posY][i]);
+				}
+				PrintArr(mapArr, "LeftMove");
+			} // for()
+
 
 			break;
 
 		case 77:
 			printf("right\n");
+
+			  // 게임오버 조건 추가
+			for (int posY = 0; posY < ARRSIZE; posY++)
+			{
+				for (int posX = ARRSIZE; posX >= 0; posX--)
+				{
+					if (posX >= ARRSIZE - rightMove)
+						continue;
+
+					if (mapArr[posY][posX] != 0)	// 값이 있는 경우
+					{
+						if (mapArr[posY][posX + rightMove] == 0)	// 앞 칸이 비었을 경우
+						{
+							mapArr[posY][posX + rightMove] = mapArr[posY][posX];
+							mapArr[posY][posX] = 0;
+							posX = ARRSIZE;
+							continue;
+						}
+						else if (mapArr[posY][posX + rightMove] == mapArr[posY][posX])	// 앞 칸의 숫자와 현재 칸의 숫자가 같을 경우
+						{
+							mapArr[posY][posX + rightMove] = -(2 * mapArr[posY][posX]);
+							mapArr[posY][posX] = 0;
+							posX++;
+							continue;
+						}
+					}
+				}
+				for (int i = 0; i < ARRSIZE; i++)
+				{
+					mapArr[posY][i] = abs(mapArr[posY][i]);
+				}
+				PrintArr(mapArr,"RightMove");
+			} // for()
+
 			break;
 
 		default:
@@ -189,15 +257,16 @@ int main()
 	esc : 27
 	*/
 
-	PrintArr(mapArr);
+	// PrintArr(mapArr);
 
 }
 
-void PrintArr(int (*mapArr)[ARRSIZE])
+void PrintArr(int (*mapArr)[ARRSIZE], char *string)
 {
 	// mapArr[3][3] = 1048;
-	Sleep(250);
+	Sleep(500);
 	system("cls");
+	printf("%s\n", string);
 	for (int i = 0; i < ARRSIZE; i++)
 	{
 		puts(" ------- ------- ------- -------");
