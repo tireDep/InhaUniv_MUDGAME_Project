@@ -46,7 +46,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove)
 		switch (userInput)
 		{
 		case 72:
-
+			// ------------------------------------------------
 			*checkCanMove = 0;
 			for (int i = 0; i < BASICARRSIZE; i++)
 			{
@@ -54,26 +54,22 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove)
 				{
 					if (mapArr[j][i] == 0 && mapArr[j + 1][i] != 0)
 					{
-						printf("front0>>>>%d J:%d I:%d\n", mapArr[j][i], j + 1, i);
+						// printf("front0>>>>%d J:%d I:%d\n", mapArr[j][i], j + 1, i);
 						(*checkCanMove)++;
 					}
-					//else if (mapArr[j][i] == 0 && mapArr[j + 1][i] == 0)
-					//printf("cant move\n");
-
 					if (mapArr[j][i] == mapArr[j + 1][i] && mapArr[j][i] != 0)
 					{
-						printf("sameNum>>>>%d J:%d I:%d\n", mapArr[j][i], j + 1, i);
+						// printf("sameNum>>>>%d J:%d I:%d\n", mapArr[j][i], j + 1, i);
 						(*checkCanMove)++;
 					}
-					//else if (mapArr[j][i] != mapArr[j + 1][i])
-					//printf("cant move\n");
 				}
 			}
 
 			if (checkCanMove == 0)
 				return;
-
+			// ------------------------------------------------
 			// 게임오버 조건 추가
+
 			for (int posX = 0; posX < BASICARRSIZE; posX++)
 			{
 				for (int posY = 0; posY < BASICARRSIZE; posY++)
@@ -88,23 +84,23 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove)
 			break;
 
 		case 80:
-			// 게임오버 조건 추가	
-
 			// -------------------------------------------------------
 			*checkCanMove = 0;
 			for (int i = 0; i < BASICARRSIZE; i++)
 			{
 				for (int j = BASICARRSIZE; j > 0; j--)
 				{
+					if (j == BASICARRSIZE)
+						continue;
+
 					if (mapArr[j][i] == 0 && mapArr[j - 1][i] != 0)
 					{
-						printf("front0>>>>%d J:%d I:%d\n", mapArr[j][i], j + 1, i);
+						// printf("front0>>>>%d J:%d I:%d\n", mapArr[j][i], j + 1, i);
 						(*checkCanMove)++;
 					}
-
 					if (mapArr[j][i] == mapArr[j - 1][i] && mapArr[j][i] != 0)
 					{
-						printf("sameNum>>>>%d J:%d I:%d\n", mapArr[j][i], j + 1, i);
+						// printf("sameNum>>>>%d J:%d I:%d\n", mapArr[j][i], j + 1, i);
 						(*checkCanMove)++;
 					}
 				}
@@ -112,11 +108,10 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove)
 
 			if (checkCanMove == 0)
 				return;
-
 			// -------------------------------------------------------
+			// 게임오버 조건 추가	
 
-
-			for (int posX = 0; posX < BASICARRSIZE; posX++)	// DOWN, RIGHT
+			for (int posX = 0; posX < BASICARRSIZE; posX++)
 			{
 				for (int posY = BASICARRSIZE; posY >= 0; posY--)
 				{
@@ -130,7 +125,30 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove)
 			break;
 
 		case 75:
+			// -------------------------------------------------------
+			*checkCanMove = 0;
+			for (int i = 0; i < BASICARRSIZE; i++)
+			{
+				for (int j = 0; j < BASICARRSIZE - 1; j++)
+				{
+					if (mapArr[i][j] == 0 && mapArr[i][j + 1] != 0)
+					{
+						printf("front0>>>>%d J:%d I:%d\n", mapArr[i][j], j, i+1);
+						(*checkCanMove)++;
+					}
+					if (mapArr[i][j] == mapArr[i][j + 1] && mapArr[i][j] != 0)
+					{
+						printf("sameNum>>>>%d J:%d I:%d\n", mapArr[i][j], j, i + 1);
+						(*checkCanMove)++;
+					}
+				}
+			}
+
+			if (checkCanMove == 0)
+				return;
+			// -------------------------------------------------------
 			// 게임오버 조건 추가
+
 			for (int posY = 0; posY < BASICARRSIZE; posY++)
 			{
 				for (int posX = 0; posX < BASICARRSIZE; posX++)
@@ -145,7 +163,33 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove)
 			break;
 
 		case 77:
+			// ------------------------------------------------
+			*checkCanMove = 0;
+			for (int i = 0; i < BASICARRSIZE; i++)
+			{
+				for (int j = BASICARRSIZE; j > 0 ; j--)
+				{
+					if (j == BASICARRSIZE)
+						continue;
+
+					if (mapArr[i][j] == 0 && mapArr[i][j - 1] != 0)
+					{
+						printf("front0>>>>%d J:%d I:%d\n", mapArr[i][j], j, i + 1);
+						(*checkCanMove)++;
+					}
+					if (mapArr[i][j] == mapArr[i][j - 1] && mapArr[i][j] != 0)
+					{
+						printf("sameNum>>>>%d J:%d I:%d\n", mapArr[i][j], j, i + 1);
+						(*checkCanMove)++;
+					}
+				}
+			}
+
+			if (checkCanMove == 0)
+				return;
+			// -------------------------------------------------------
 			// 게임오버 조건 추가
+
 			for (int posY = 0; posY < BASICARRSIZE; posY++)
 			{
 				for (int posX = BASICARRSIZE; posX >= 0; posX--)
