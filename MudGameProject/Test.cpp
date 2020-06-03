@@ -45,7 +45,7 @@ int main()
 			break;
 	}
 	
-	mapArr[0][0] = 2;
+	mapArr[0][0] = 1;
 	mapArr[1][0] = 2;
 	mapArr[2][0] = 2;
 	mapArr[3][0] = 2;
@@ -53,7 +53,7 @@ int main()
 	mapArr[3][1] = 2;
 
 	mapArr[3][2] = 2;
-	mapArr[3][3] = 2;
+	mapArr[3][3] = 1;
 	PrintArr(mapArr,"Start");
 	
 	// 키 입력 구분
@@ -95,7 +95,7 @@ int main()
 					if (posY == 0)
 						continue;
 
-					if (mapArr[posY][posX] != 0)	// 값이 있는 경우
+					if (mapArr[posY][posX] != 0 && mapArr[posY][posX] != 1)	// 값이 있는 경우
 					{
 						if (mapArr[posY - upMove][posX] == 0)	// 앞 칸이 비었을 경우
 						{
@@ -273,7 +273,14 @@ void PrintArr(int (*mapArr)[ARRSIZE], char *string)
 		puts("|       |       |       |       | ");
 		for (int j = 0; j < ARRSIZE; j++)
 		{
-			printf("| %5d ", mapArr[i][j]);
+			if (mapArr[i][j] == 1)
+			{
+				printf("| Block ");
+			}
+			else
+			{
+				printf("| %5d ", mapArr[i][j]);
+			}
 		}
 		puts("|\n|       |       |       |       |");
 	}
