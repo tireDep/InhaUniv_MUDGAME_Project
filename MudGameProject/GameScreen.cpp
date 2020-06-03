@@ -35,10 +35,20 @@ void SetStartMap(int(*mapArr)[BASICARRSIZE], int check)
 }
 
 // todo : 추후 리팩토링 다시할 예정
-void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove)
+void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOver)
 {
+	*checkCanMove = 0;
+	*checkGameOver = 0;
+
 	int userInput = 0;
 	userInput = _getch();
+
+	if (userInput == 27)
+	{
+		puts("Input Esc\n");
+		*checkCanMove = 27;
+		return;
+	}
 
 	if (userInput == 224)
 	{
@@ -51,7 +61,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove)
 			for (int i = 0; i < BASICARRSIZE; i++)
 			{
 				for (int j = 0; j < BASICARRSIZE - 1; j++)
-				{
+				{		
 					if (mapArr[j][i] == 0 && mapArr[j + 1][i] != 0)
 					{
 						// printf("front0>>>>%d J:%d I:%d\n", mapArr[j][i], j + 1, i);
@@ -65,10 +75,23 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove)
 				}
 			}
 
+			// ------------------------------------------------
+			// 게임오버 조건 추가
+			for (int i = 0; i < BASICARRSIZE; i++)
+			{
+				for (int j = 0; j < BASICARRSIZE; j++)
+				{
+					if (mapArr[j][i] != 0)
+					{
+						(*checkGameOver)++;
+					}
+				}
+			}
+			if (checkCanMove == 0 && (*checkGameOver) == 16)
+				return;
 			if (checkCanMove == 0)
 				return;
 			// ------------------------------------------------
-			// 게임오버 조건 추가
 
 			for (int posX = 0; posX < BASICARRSIZE; posX++)
 			{
@@ -106,10 +129,24 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove)
 				}
 			}
 
+
+			// ------------------------------------------------
+			// 게임오버 조건 추가
+			for (int i = 0; i < BASICARRSIZE; i++)
+			{
+				for (int j = 0; j < BASICARRSIZE; j++)
+				{
+					if (mapArr[j][i] != 0)
+					{
+						(*checkGameOver)++;
+					}
+				}
+			}
+			if (checkCanMove == 0 && (*checkGameOver) == 16)
+				return;
 			if (checkCanMove == 0)
 				return;
-			// -------------------------------------------------------
-			// 게임오버 조건 추가	
+			// ------------------------------------------------
 
 			for (int posX = 0; posX < BASICARRSIZE; posX++)
 			{
@@ -133,21 +170,34 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove)
 				{
 					if (mapArr[i][j] == 0 && mapArr[i][j + 1] != 0)
 					{
-						printf("front0>>>>%d J:%d I:%d\n", mapArr[i][j], j, i+1);
+						//printf("front0>>>>%d J:%d I:%d\n", mapArr[i][j], j, i+1);
 						(*checkCanMove)++;
 					}
 					if (mapArr[i][j] == mapArr[i][j + 1] && mapArr[i][j] != 0)
 					{
-						printf("sameNum>>>>%d J:%d I:%d\n", mapArr[i][j], j, i + 1);
+						//printf("sameNum>>>>%d J:%d I:%d\n", mapArr[i][j], j, i + 1);
 						(*checkCanMove)++;
 					}
 				}
 			}
 
+			// ------------------------------------------------
+			// 게임오버 조건 추가
+			for (int i = 0; i < BASICARRSIZE; i++)
+			{
+				for (int j = 0; j < BASICARRSIZE; j++)
+				{
+					if (mapArr[i][j] != 0)
+					{
+						(*checkGameOver)++;
+					}
+				}
+			}
+			if (checkCanMove == 0 && (*checkGameOver) == 16)
+				return;
 			if (checkCanMove == 0)
 				return;
-			// -------------------------------------------------------
-			// 게임오버 조건 추가
+			// ------------------------------------------------
 
 			for (int posY = 0; posY < BASICARRSIZE; posY++)
 			{
@@ -174,21 +224,34 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove)
 
 					if (mapArr[i][j] == 0 && mapArr[i][j - 1] != 0)
 					{
-						printf("front0>>>>%d J:%d I:%d\n", mapArr[i][j], j, i + 1);
+						//printf("front0>>>>%d J:%d I:%d\n", mapArr[i][j], j, i + 1);
 						(*checkCanMove)++;
 					}
 					if (mapArr[i][j] == mapArr[i][j - 1] && mapArr[i][j] != 0)
 					{
-						printf("sameNum>>>>%d J:%d I:%d\n", mapArr[i][j], j, i + 1);
+						//printf("sameNum>>>>%d J:%d I:%d\n", mapArr[i][j], j, i + 1);
 						(*checkCanMove)++;
 					}
 				}
 			}
 
+			// ------------------------------------------------
+			// 게임오버 조건 추가
+			for (int i = 0; i < BASICARRSIZE; i++)
+			{
+				for (int j = 0; j < BASICARRSIZE; j++)
+				{
+					if (mapArr[j][i] != 0)
+					{
+						(*checkGameOver)++;
+					}
+				}
+			}
+			if (checkCanMove == 0 && (*checkGameOver) == 16)
+				return;
 			if (checkCanMove == 0)
 				return;
-			// -------------------------------------------------------
-			// 게임오버 조건 추가
+			// ------------------------------------------------
 
 			for (int posY = 0; posY < BASICARRSIZE; posY++)
 			{
@@ -256,9 +319,9 @@ void PrintArr(int(*mapArr)[BASICARRSIZE], char *string)
 {
 	int checkNum = 0;
 	Sleep(500);
-	// system("cls");
+	system("cls");
 	printf("\n   [123456score] 2048 [higestscore]  \n\n\n");
-	printf(" >> Now status '%s'\n", string);
+	printf(" >> Now status '%s'\n\n", string);
 	for (int i = 0; i < BASICARRSIZE; i++)
 	{
 		puts("  -------- -------- -------- -------- ");
@@ -266,24 +329,26 @@ void PrintArr(int(*mapArr)[BASICARRSIZE], char *string)
 		for (int j = 0; j < BASICARRSIZE; j++)
 		{
 			checkNum = 0;
-			if (mapArr[i][j] == 1)
+			//if (mapArr[i][j] == 1)
+			//{
+			//	printf(" |  Block  ");
+			//}
+			//else
+			//{
+			while (pow(2, checkNum) != mapArr[i][j] && mapArr[i][j] != 0)
 			{
-				printf(" |  Block  ");
+				checkNum++;
 			}
-			else
-			{
-				printf(" |");
-				while (pow(2, checkNum) != mapArr[i][j] && mapArr[i][j] != 0)
-				{
-					checkNum++;
-				}
-				TextColor(WHITE - checkNum, BLACK + checkNum);
-				printf("%6d ", mapArr[i][j]);
-				TextColor(WHITE, BLACK);
-				// 색상 코드 추가
-			}
+			printf(" ");
+			TextColor(WHITE, BLACK);
+			printf("|");
+			TextColor(WHITE - checkNum, BLACK + checkNum);
+			printf("%6d ", mapArr[i][j]);
+			//}
 		}
-		puts(" |\n |        |        |        |        |");
+		printf(" ");
+		TextColor(WHITE, BLACK);
+		puts("|\n |        |        |        |        |");
 	}
 	puts("  -------- -------- -------- --------");
 }
