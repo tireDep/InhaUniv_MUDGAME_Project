@@ -3,12 +3,11 @@
 
 int main()
 {
-	system("mode con cols=39 lines=23");
-
 	srand((unsigned)time(NULL));
-	
-	int checkCanMove = 0;
+	system("mode con cols=39 lines=26");
 
+	int checkCanMove = 0;
+	int checkGameOver = 0;
 	int mapArr[BASICARRSIZE][BASICARRSIZE] = { 0 };
 
 	SetStartMap(mapArr, 0);
@@ -16,7 +15,20 @@ int main()
 
 	while (1)
 	{
-		PlayerInput(mapArr, &checkCanMove);
+		PlayerInput(mapArr, &checkCanMove, &checkGameOver);
+
+		if (checkCanMove == 27)
+		{
+			puts("게임 종료");
+			return 0;
+		}
+		printf("%d\n", checkGameOver);
+		if (checkCanMove == 0 && checkGameOver == BASICARRSIZE * BASICARRSIZE)
+		{
+			puts("게임오버");
+			// todo : 게임오버 이후 어찌할지 작성
+		}
+
 		if (checkCanMove != 0)
 		{
 			SetStartMap(mapArr, 1);
@@ -24,7 +36,14 @@ int main()
 		}
 		else
 		{
-			puts("이동불가능, 재입력");
+			puts(">> Can't Move");
+			printf("Ready to New Input : ");
+			for (int i = 5; i > 0; i--)
+			{
+				Sleep(500);
+				printf("%d ", i);
+			}
+			PrintArr(mapArr, "NewInput");
 			continue;
 		}
 	}

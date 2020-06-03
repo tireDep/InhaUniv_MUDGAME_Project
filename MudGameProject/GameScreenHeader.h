@@ -1,7 +1,7 @@
 #pragma once
 
 void SetStartMap(int(*mapArr)[BASICARRSIZE], int check);
-void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove);
+void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOver);
 
 void MoveToInput(int(*mapArr)[BASICARRSIZE], int *posY, int *posX, int moveY, int moveX, int setStart, int setNext, int moveTo);
 
