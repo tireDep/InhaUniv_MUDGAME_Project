@@ -3,8 +3,7 @@
 void SetStartMap(int (*mapArr)[BASICARRSIZE], int check);
 void PlayerInput(int (*mapArr)[BASICARRSIZE]);
 
-int MoveTo_UpDown(int(*mapArr)[BASICARRSIZE], int posY, int posX, int moveY, int moveX, int setStart, int setNext);
-int MoveTo_RightLeft(int(*mapArr)[BASICARRSIZE], int posY, int posX, int moveY, int moveX, int setStart, int setNext);
+void MoveToInput(int(*mapArr)[BASICARRSIZE], int *posY, int *posX, int moveY, int moveX, int setStart, int setNext, int moveTo);
 
 void SetAbsVal_UpDown(int(*mapArr)[BASICARRSIZE], int posX);
 void SetAbsVal_RightLeft(int(*mapArr)[BASICARRSIZE], int posY);
@@ -26,7 +25,6 @@ int main()
 	while (1)
 	{
 		PlayerInput(mapArr);
-		Sleep(250);
 		SetStartMap(mapArr, 1);
 		PrintArr(mapArr, "NewBlock");
 	}
@@ -54,13 +52,13 @@ void SetStartMap(int (*mapArr)[BASICARRSIZE], int check)
 		check++;
 		posX = rand() % BASICARRSIZE;
 		posY = rand() % BASICARRSIZE;
-		// --------------------------
+
 		randVal = rand() % 2;
 		if (randVal == 0)
 			randVal = 2;
 		else if (randVal == 1)
 			randVal = 4;
-		// ----------------------
+
 		if (mapArr[posY][posX] != 0 && check >= 1)
 		{
 			check--;
@@ -78,6 +76,7 @@ void SetStartMap(int (*mapArr)[BASICARRSIZE], int check)
 	}
 }
 
+// todo : 추후 리팩토링 다시할 예정
 void PlayerInput(int(*mapArr)[BASICARRSIZE])
 {
 	int userInput = 0;
@@ -96,7 +95,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE])
 				{
 					if (posY == 0)
 						continue;
-					posY = MoveTo_UpDown(mapArr, posY, posX, upMove, stayMove, setZero, minusPos);
+					MoveToInput(mapArr, &posY, &posX, upMove, stayMove, setZero, minusPos, upDownPos);
 				}
 				SetAbsVal_UpDown(mapArr,posX);
 			}
@@ -111,7 +110,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE])
 				{
 					if (posY >= BASICARRSIZE - downMove)
 						continue;
-					posY = MoveTo_UpDown(mapArr, posY, posX, downMove, stayMove, setArrSize, plusPos);
+					MoveToInput(mapArr, &posY, &posX, downMove, stayMove, setArrSize, plusPos, upDownPos);
 				}
 				SetAbsVal_UpDown(mapArr, posX);
 			}
@@ -126,7 +125,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE])
 				{
 					if (posX == 0)
 						continue;
-					posX = MoveTo_RightLeft(mapArr, posY, posX, stayMove, leftMove, setZero, minusPos);
+					MoveToInput(mapArr, &posY, &posX, stayMove, leftMove, setZero, minusPos, leftRightPos);
 				}
 				SetAbsVal_RightLeft(mapArr, posY);
 			} // for()
@@ -141,7 +140,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE])
 				{
 					if (posX >= BASICARRSIZE - rightMove)
 						continue;
-					posX = MoveTo_RightLeft(mapArr, posY, posX, stayMove, rightMove, setArrSize, plusPos);
+					MoveToInput(mapArr, &posY, &posX, stayMove, rightMove, setArrSize, plusPos, leftRightPos);
 				}
 				SetAbsVal_RightLeft(mapArr, posY);
 			} // for()
@@ -158,45 +157,31 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE])
 	}
 }
 
-int MoveTo_UpDown(int (*mapArr)[BASICARRSIZE], int posY, int posX , int moveY, int moveX, int setStart, int setNext)
+void MoveToInput(int(*mapArr)[BASICARRSIZE], int *posY, int *posX, int moveY, int moveX, int setStart, int setNext, int moveTo)
 {
-	if (mapArr[posY][posX] != 0) //&& mapArr[posY][posX] != 1)	// 값이 있는 경우
+	if (mapArr[*posY][*posX] != 0) //&& mapArr[posY][posX] != 1)	// 값이 있는 경우
 	{
-		if (mapArr[posY + moveY][posX + moveX] == 0)	// 앞 칸이 비었을 경우
+		if (mapArr[*posY + moveY][*posX + moveX] == 0)	// 앞 칸이 비었을 경우
 		{
-			mapArr[posY + moveY][posX + moveX] = mapArr[posY][posX];
-			mapArr[posY][posX] = setZero;
-			posY = setStart;
+			mapArr[*posY + moveY][*posX + moveX] = mapArr[*posY][*posX];
+			mapArr[*posY][*posX] = setZero;
+
+			if(moveTo == upDownPos)
+				*posY = setStart;
+			else
+				*posX = setStart;
 		}
-		else if (mapArr[posY + moveY][posX + moveX] == mapArr[posY][posX])	// 앞 칸의 숫자와 현재 칸의 숫자가 같을 경우
+		else if (mapArr[*posY + moveY][*posX + moveX] == mapArr[*posY][*posX])	// 앞 칸의 숫자와 현재 칸의 숫자가 같을 경우
 		{
-			mapArr[posY + moveY][posX + moveX] = -(2 * mapArr[posY][posX]);
-			mapArr[posY][posX] = setZero;
-			posY += setNext;
+			mapArr[*posY + moveY][*posX + moveX] = -(2 * mapArr[*posY][*posX]);
+			mapArr[*posY][*posX] = setZero;
+
+			if(moveTo == upDownPos)
+				*posY += setNext;
+			else
+				posX += setNext;
 		}
 	}
-	return posY;
-}
-
-int MoveTo_RightLeft(int(*mapArr)[BASICARRSIZE], int posY, int posX, int moveY, int moveX, int setStart, int setNext)
-{
-	if (mapArr[posY][posX] != 0)	// 값이 있는 경우
-	{
-		if (mapArr[posY + moveY][posX + moveX] == 0)	// 앞 칸이 비었을 경우
-		{
-			mapArr[posY + moveY][posX + moveX] = mapArr[posY][posX];
-			mapArr[posY][posX] = setZero;
-			posX = setStart;
-		}
-		else if (mapArr[posY + moveY][posX + moveX] == mapArr[posY][posX])	// 앞 칸의 숫자와 현재 칸의 숫자가 같을 경우
-		{
-			mapArr[posY + moveY][posX + moveX] = -(2 * mapArr[posY][posX]);
-			mapArr[posY][posX] = setZero;
-			posX += setNext;
-		}
-	}
-
-	return posX;
 }
 
 void SetAbsVal_UpDown(int(*mapArr)[BASICARRSIZE], int posX)
