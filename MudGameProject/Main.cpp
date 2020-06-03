@@ -2,7 +2,12 @@
 
 void SetStartMap(int (*mapArr)[BASICARRSIZE], int check);
 void PlayerInput(int (*mapArr)[BASICARRSIZE]);
-void InputMove_UpLeft(int(*mapArr)[BASICARRSIZE]);
+
+int MoveTo_UpDown(int(*mapArr)[BASICARRSIZE], int posY, int posX, int moveY, int moveX, int setStart, int setNext);
+int MoveTo_RightLeft(int(*mapArr)[BASICARRSIZE], int posY, int posX, int moveY, int moveX, int setStart, int setNext);
+
+void SetAbsVal_UpDown(int(*mapArr)[BASICARRSIZE], int posX);
+void SetAbsVal_RightLeft(int(*mapArr)[BASICARRSIZE], int posY);
 
 void PrintArr(int(*mapArr)[BASICARRSIZE], char *string);
 void TextColor(int foreground, int background);
@@ -12,6 +17,7 @@ int main()
 	system("mode con cols=39 lines=23");
 
 	srand((unsigned)time(NULL));
+	bool isPrinting = false;
 	int mapArr[BASICARRSIZE][BASICARRSIZE] = { 0 };
 
 	SetStartMap(mapArr, 0);
@@ -72,7 +78,7 @@ void SetStartMap(int (*mapArr)[BASICARRSIZE], int check)
 	}
 }
 
-void PlayerInput(int (*mapArr)[BASICARRSIZE])
+void PlayerInput(int(*mapArr)[BASICARRSIZE])
 {
 	int userInput = 0;
 	userInput = _getch();
@@ -84,7 +90,17 @@ void PlayerInput(int (*mapArr)[BASICARRSIZE])
 		{
 		case 72:
 			// 게임오버 조건 추가
-			InputMove_UpLeft(mapArr);
+			for (int posX = 0; posX < BASICARRSIZE; posX++) // UP, LEFT
+			{
+				for (int posY = 0; posY < BASICARRSIZE; posY++)
+				{
+					if (posY == 0)
+						continue;
+					posY = MoveTo_UpDown(mapArr, posY, posX, upMove, stayMove, setZero, minusPos);
+				}
+				SetAbsVal_UpDown(mapArr,posX);
+			}
+			PrintArr(mapArr, "Move to Up");
 			break;
 
 		case 80:
@@ -95,30 +111,10 @@ void PlayerInput(int (*mapArr)[BASICARRSIZE])
 				{
 					if (posY >= BASICARRSIZE - downMove)
 						continue;
-
-					if (mapArr[posY][posX] != 0)	// 값이 있는 경우
-					{
-						if (mapArr[posY + downMove][posX] == 0)	// 앞 칸이 비었을 경우
-						{
-							mapArr[posY + downMove][posX] = mapArr[posY][posX];
-							mapArr[posY][posX] = 0;
-							posY = BASICARRSIZE;
-							continue;
-						}
-						else if (mapArr[posY + downMove][posX] == mapArr[posY][posX])	// 앞 칸의 숫자와 현재 칸의 숫자가 같을 경우
-						{
-							mapArr[posY + downMove][posX] = -(2 * mapArr[posY][posX]);
-							mapArr[posY][posX] = 0;
-							posY++;
-							continue;
-						}
-					}
+					posY = MoveTo_UpDown(mapArr, posY, posX, downMove, stayMove, setArrSize, plusPos);
 				}
-				for (int i = 0; i < BASICARRSIZE; i++)
-				{
-					mapArr[i][posX] = abs(mapArr[i][posX]);
-				}
-			} // for()
+				SetAbsVal_UpDown(mapArr, posX);
+			}
 			PrintArr(mapArr, "Move to Down");
 			break;
 
@@ -130,29 +126,9 @@ void PlayerInput(int (*mapArr)[BASICARRSIZE])
 				{
 					if (posX == 0)
 						continue;
-
-					if (mapArr[posY][posX] != 0)	// 값이 있는 경우
-					{
-						if (mapArr[posY][posX - leftMove] == 0)	// 앞 칸이 비었을 경우
-						{
-							mapArr[posY][posX - leftMove] = mapArr[posY][posX];
-							mapArr[posY][posX] = 0;
-							posX = 0;
-							continue;
-						}
-						else if (mapArr[posY][posX - leftMove] == mapArr[posY][posX])	// 앞 칸의 숫자와 현재 칸의 숫자가 같을 경우
-						{
-							mapArr[posY][posX - leftMove] = -(2 * mapArr[posY][posX]);
-							mapArr[posY][posX] = 0;
-							posX--;
-							continue;
-						}
-					}
+					posX = MoveTo_RightLeft(mapArr, posY, posX, stayMove, leftMove, setZero, minusPos);
 				}
-				for (int i = 0; i < BASICARRSIZE; i++)
-				{
-					mapArr[posY][i] = abs(mapArr[posY][i]);
-				}
+				SetAbsVal_RightLeft(mapArr, posY);
 			} // for()
 			PrintArr(mapArr, "Move to Left");
 			break;
@@ -165,29 +141,9 @@ void PlayerInput(int (*mapArr)[BASICARRSIZE])
 				{
 					if (posX >= BASICARRSIZE - rightMove)
 						continue;
-
-					if (mapArr[posY][posX] != 0)	// 값이 있는 경우
-					{
-						if (mapArr[posY][posX + rightMove] == 0)	// 앞 칸이 비었을 경우
-						{
-							mapArr[posY][posX + rightMove] = mapArr[posY][posX];
-							mapArr[posY][posX] = 0;
-							posX = BASICARRSIZE;
-							continue;
-						}
-						else if (mapArr[posY][posX + rightMove] == mapArr[posY][posX])	// 앞 칸의 숫자와 현재 칸의 숫자가 같을 경우
-						{
-							mapArr[posY][posX + rightMove] = -(2 * mapArr[posY][posX]);
-							mapArr[posY][posX] = 0;
-							posX++;
-							continue;
-						}
-					}
+					posX = MoveTo_RightLeft(mapArr, posY, posX, stayMove, rightMove, setArrSize, plusPos);
 				}
-				for (int i = 0; i < BASICARRSIZE; i++)
-				{
-					mapArr[posY][i] = abs(mapArr[posY][i]);
-				}
+				SetAbsVal_RightLeft(mapArr, posY);
 			} // for()
 			PrintArr(mapArr, "Move to Right");
 			break;
@@ -202,45 +158,62 @@ void PlayerInput(int (*mapArr)[BASICARRSIZE])
 	}
 }
 
-void InputMove_UpLeft(int(*mapArr)[BASICARRSIZE])
+int MoveTo_UpDown(int (*mapArr)[BASICARRSIZE], int posY, int posX , int moveY, int moveX, int setStart, int setNext)
 {
-	for (int posX = 0; posX < BASICARRSIZE; posX++) // UP, LEFT
+	if (mapArr[posY][posX] != 0) //&& mapArr[posY][posX] != 1)	// 값이 있는 경우
 	{
-		for (int posY = 0; posY < BASICARRSIZE; posY++)
+		if (mapArr[posY + moveY][posX + moveX] == 0)	// 앞 칸이 비었을 경우
 		{
-			if (posY == 0)
-				continue;
-
-			if (mapArr[posY][posX] != 0) //&& mapArr[posY][posX] != 1)	// 값이 있는 경우
-			{
-				if (mapArr[posY - upMove][posX] == 0)	// 앞 칸이 비었을 경우
-				{
-					mapArr[posY - upMove][posX] = mapArr[posY][posX];
-					mapArr[posY][posX] = 0;
-					posY = 0;
-					continue;
-				}
-				else if (mapArr[posY - upMove][posX] == mapArr[posY][posX])	// 앞 칸의 숫자와 현재 칸의 숫자가 같을 경우
-				{
-					mapArr[posY - upMove][posX] = -(2 * mapArr[posY][posX]);
-					mapArr[posY][posX] = 0;
-					posY--;
-					continue;
-				}
-			}
+			mapArr[posY + moveY][posX + moveX] = mapArr[posY][posX];
+			mapArr[posY][posX] = setZero;
+			posY = setStart;
 		}
-		for (int i = 0; i < BASICARRSIZE; i++)
+		else if (mapArr[posY + moveY][posX + moveX] == mapArr[posY][posX])	// 앞 칸의 숫자와 현재 칸의 숫자가 같을 경우
 		{
-			mapArr[i][posX] = abs(mapArr[i][posX]);
+			mapArr[posY + moveY][posX + moveX] = -(2 * mapArr[posY][posX]);
+			mapArr[posY][posX] = setZero;
+			posY += setNext;
 		}
 	}
-	PrintArr(mapArr, "Move to Up");
+	return posY;
+}
+
+int MoveTo_RightLeft(int(*mapArr)[BASICARRSIZE], int posY, int posX, int moveY, int moveX, int setStart, int setNext)
+{
+	if (mapArr[posY][posX] != 0)	// 값이 있는 경우
+	{
+		if (mapArr[posY + moveY][posX + moveX] == 0)	// 앞 칸이 비었을 경우
+		{
+			mapArr[posY + moveY][posX + moveX] = mapArr[posY][posX];
+			mapArr[posY][posX] = setZero;
+			posX = setStart;
+		}
+		else if (mapArr[posY + moveY][posX + moveX] == mapArr[posY][posX])	// 앞 칸의 숫자와 현재 칸의 숫자가 같을 경우
+		{
+			mapArr[posY + moveY][posX + moveX] = -(2 * mapArr[posY][posX]);
+			mapArr[posY][posX] = setZero;
+			posX += setNext;
+		}
+	}
+
+	return posX;
+}
+
+void SetAbsVal_UpDown(int(*mapArr)[BASICARRSIZE], int posX)
+{
+	for (int i = 0; i < BASICARRSIZE; i++)
+		mapArr[i][posX] = abs(mapArr[i][posX]);
+}
+
+void SetAbsVal_RightLeft(int(*mapArr)[BASICARRSIZE], int posY)
+{
+	for (int i = 0; i < BASICARRSIZE; i++)
+		mapArr[posY][i] = abs(mapArr[posY][i]);
 }
 
 void PrintArr(int(*mapArr)[BASICARRSIZE], char *string)
 {
 	int checkNum = 0;
-	
 	Sleep(500);
 	system("cls");
 	printf("\n   [123456score] 2048 [higestscore]  \n\n\n");
