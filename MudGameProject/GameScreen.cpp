@@ -1,7 +1,55 @@
 #include "BasicHeader.h"
 #include "GameScreenHeader.h"
 
-void SetStartMap(int(*mapArr)[BASICARRSIZE], int check)
+int Update()
+{
+	int inputNum = 0;
+	int checkCanMove = 0;
+	int checkGameOver = 0;
+	int kbhitCnt = 0;
+
+	int mapArr[BASICARRSIZE][BASICARRSIZE] = { 0 };
+
+	SetNewNum(mapArr, 0);
+	PrintArr(mapArr, "Start", &kbhitCnt);
+
+	while (1)
+	{
+		PlayerInput(mapArr, &checkCanMove, &checkGameOver, &kbhitCnt);
+
+		if (checkCanMove == 27)	// Pause
+		{
+			// 27 : esc Ascii, 1 : 1 Ascii
+			printf(">>Pause\n\nIf You Finish Game, push 'Esc'\nContinue Game, push 'AnyKey'\nInput : ");
+			if (CheckGameContinue(mapArr, &kbhitCnt))
+				return 0;
+			else
+				continue;
+		}
+
+		if (checkCanMove == 0 && checkGameOver == BASICARRSIZE * BASICARRSIZE)	// GameOver
+		{
+			printf("\n>> GameOver\n\nIf You Finish Game, push 'Esc'\nRevert Game, push 'AnyKey'\nInput : ");
+			if (CheckGameContinue(mapArr, &kbhitCnt))
+				return 0;
+			else
+				continue;
+		}
+
+		if (checkCanMove != 0)	// Can Move
+		{
+			SetNewNum(mapArr, 1);
+			PrintArr(mapArr, "NewBlock", &kbhitCnt);
+		}
+		else // Can't Move
+		{
+			PrintNewInput(mapArr, "\n>> Can't Move\n\nReady to New Input : ", &kbhitCnt);
+			continue;
+		}
+	}
+}
+
+void SetNewNum(int(*mapArr)[BASICARRSIZE], int check)
 {
 	int posX = 0, posY = 0, randVal = 0;
 
@@ -35,29 +83,14 @@ void SetStartMap(int(*mapArr)[BASICARRSIZE], int check)
 }
 
 // todo : 추후 리팩토링 다시할 예정
-void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOver)
+void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOver, int *kbhitCnt)
 {
 	*checkCanMove = 0;
 	*checkGameOver = 0;
 
-	int deleteInput = 0;
 	int userInput = 0;
 
-	if (_kbhit())
-	{
-		deleteInput = _getch();
-		while (1)
-		{
-			if (deleteInput == 224)
-			{
-				deleteInput = _getch();
-				if (deleteInput == 72 || deleteInput == 75 || deleteInput == 77 || deleteInput == 80)
-					break;
-			}
-			else
-				break;
-		}
-	}
+	DeleteInput(kbhitCnt);
 
 	printf("\nPush Your Arrow Btn : ");
 	userInput = _getch();
@@ -80,7 +113,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 			{
 				for (int j = 0; j < BASICARRSIZE - 1; j++)
 				{
-					if (IsCanMove(mapArr, j, i, checkCanMove, checkGameOver, plusPos, setZero))
+					if (IsCanMove(mapArr, j, i, checkCanMove, checkGameOver, plusPos, zeroPos))
 						return;
 				}
 				if (mapArr[BASICARRSIZE-1][i] != 0)	// 맨 마지막 값 저장
@@ -93,11 +126,11 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 				{
 					if (posY == 0)
 						continue;
-					MoveToInput(mapArr, &posY, &posX, upMove, stayMove, setZero, minusPos, upDownPos);
+					MoveToInput(mapArr, &posY, &posX, upMove, stayMove, zeroPos, minusPos, upDownPos);
 				}
 				SetAbsVal_UpDown(mapArr, posX);
 			}
-			PrintArr(mapArr, "Move to Up");
+			PrintArr(mapArr, "Move to Up", kbhitCnt);
 			break;
 
 		case 80:
@@ -109,7 +142,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 					if (j == BASICARRSIZE)
 						continue;
 
-					if (IsCanMove(mapArr,j,i,checkCanMove,checkGameOver,minusPos,setZero))
+					if (IsCanMove(mapArr,j,i,checkCanMove,checkGameOver,minusPos,zeroPos))
 						return;
 				}
 				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 맨 마지막 값 저장
@@ -122,11 +155,11 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 				{
 					if (posY >= BASICARRSIZE - downMove)
 						continue;
-					MoveToInput(mapArr, &posY, &posX, downMove, stayMove, setArrSize, plusPos, upDownPos);
+					MoveToInput(mapArr, &posY, &posX, downMove, stayMove, arrSizePos, plusPos, upDownPos);
 				}
 				SetAbsVal_UpDown(mapArr, posX);
 			}
-			PrintArr(mapArr, "Move to Down");
+			PrintArr(mapArr, "Move to Down", kbhitCnt);
 			break;
 
 		case 75:
@@ -135,7 +168,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 			{
 				for (int j = 0; j < BASICARRSIZE - 1; j++)
 				{
-					if (IsCanMove(mapArr, i, j, checkCanMove, checkGameOver, setZero, plusPos))
+					if (IsCanMove(mapArr, i, j, checkCanMove, checkGameOver, zeroPos, plusPos))
 						return;
 				}
 				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 맨 마지막 값 저장
@@ -148,11 +181,11 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 				{
 					if (posX == 0)
 						continue;
-					MoveToInput(mapArr, &posY, &posX, stayMove, leftMove, setZero, minusPos, leftRightPos);
+					MoveToInput(mapArr, &posY, &posX, stayMove, leftMove, zeroPos, minusPos, leftRightPos);
 				}
 				SetAbsVal_RightLeft(mapArr, posY);
 			} // for()
-			PrintArr(mapArr, "Move to Left");
+			PrintArr(mapArr, "Move to Left", kbhitCnt);
 			break;
 
 		case 77:
@@ -164,7 +197,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 					if (j == BASICARRSIZE)
 						continue;
 
-					if (IsCanMove(mapArr, i, j, checkCanMove, checkGameOver, setZero, minusPos))
+					if (IsCanMove(mapArr, i, j, checkCanMove, checkGameOver, zeroPos, minusPos))
 						return;
 				}
 				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 맨 마지막 값 저장
@@ -177,11 +210,11 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 				{
 					if (posX >= BASICARRSIZE - rightMove)
 						continue;
-					MoveToInput(mapArr, &posY, &posX, stayMove, rightMove, setArrSize, plusPos, leftRightPos);
+					MoveToInput(mapArr, &posY, &posX, stayMove, rightMove, arrSizePos, plusPos, leftRightPos);
 				}
 				SetAbsVal_RightLeft(mapArr, posY);
 			} // for()
-			PrintArr(mapArr, "Move to Right");
+			PrintArr(mapArr, "Move to Right", kbhitCnt);
 			break;
 
 		default:
@@ -223,7 +256,7 @@ void MoveToInput(int(*mapArr)[BASICARRSIZE], int *posY, int *posX, int moveY, in
 		if (mapArr[*posY + moveY][*posX + moveX] == 0)	// 앞 칸이 비었을 경우
 		{
 			mapArr[*posY + moveY][*posX + moveX] = mapArr[*posY][*posX];
-			mapArr[*posY][*posX] = setZero;
+			mapArr[*posY][*posX] = zeroPos;
 
 			if (moveTo == upDownPos)
 				*posY = setStart;
@@ -233,7 +266,7 @@ void MoveToInput(int(*mapArr)[BASICARRSIZE], int *posY, int *posX, int moveY, in
 		else if (mapArr[*posY + moveY][*posX + moveX] == mapArr[*posY][*posX])	// 앞 칸의 숫자와 현재 칸의 숫자가 같을 경우
 		{
 			mapArr[*posY + moveY][*posX + moveX] = -(2 * mapArr[*posY][*posX]);
-			mapArr[*posY][*posX] = setZero;
+			mapArr[*posY][*posX] = zeroPos;
 
 			if (moveTo == upDownPos)
 				*posY += setNext;
@@ -255,7 +288,7 @@ void SetAbsVal_RightLeft(int(*mapArr)[BASICARRSIZE], int posY)
 		mapArr[posY][i] = abs(mapArr[posY][i]);
 }
 
-void PrintArr(int(*mapArr)[BASICARRSIZE], char *string)
+void PrintArr(int(*mapArr)[BASICARRSIZE], char *string, int *kbhitCnt)
 {
 	int checkNum = 0;
 	Sleep(200);
@@ -264,6 +297,8 @@ void PrintArr(int(*mapArr)[BASICARRSIZE], char *string)
 	printf(" >> Now status '%s'\n\n", string);
 	for (int i = 0; i < BASICARRSIZE; i++)
 	{
+		CheckKbhitCnt(kbhitCnt);
+		DeleteInput(kbhitCnt);
 		puts("  -------- -------- -------- -------- ");
 		puts(" |        |        |        |        | ");
 		for (int j = 0; j < BASICARRSIZE; j++)
@@ -297,4 +332,62 @@ void TextColor(int foreground, int background)
 {
 	int color = foreground + background * 16;
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
+}
+
+bool CheckGameContinue(int(*mapArr)[4], int *kbhitCnt)
+{
+	if (_getch() == 27)
+	{
+		printf("1\n\n>> Exit Game\n\n");
+		return TRUE;
+	}
+	else
+	{
+		PrintNewInput(mapArr, "AnyKey\n\n>> Revert Game\n\nReady to New Input : ", kbhitCnt);
+		return FALSE;
+	}
+}
+
+void CheckKbhitCnt(int *kbhitCnt)
+{
+	if (_kbhit())
+		(*kbhitCnt)++;
+}
+
+void DeleteInput(int *kbhitCnt)
+{
+	int deleteInput = 0;
+	rewind(stdin);
+
+	while (*kbhitCnt>0)
+	{
+		deleteInput = _getch();
+		while (1)
+		{
+			if (deleteInput == 224)
+			{
+				deleteInput = _getch();
+				if (deleteInput == 72 || deleteInput == 75 || deleteInput == 77 || deleteInput == 80)
+					break;
+			}
+			else
+				break;
+		}
+		(*kbhitCnt)--;
+	}
+}
+
+void PrintNewInput(int(*mapArr)[4], char *string, int *kbhitCnt)
+{
+	printf("%s", string);
+	for (int i = 5; i > 0; i--)
+	{
+		CheckKbhitCnt(kbhitCnt);
+		DeleteInput(kbhitCnt);
+		Sleep(500);
+		printf("%d ", i);
+		CheckKbhitCnt(kbhitCnt);
+		DeleteInput(kbhitCnt);
+	}
+	PrintArr(mapArr, "NewInput", kbhitCnt);
 }
