@@ -1,8 +1,6 @@
 #include "BasicHeader.h"
 #include "GameScreenHeader.h"
 
-bool IsCanMove(int(*mapArr)[BASICARRSIZE], int posY, int posX, int *checkCanMove, int *checkGameOver, int moveY, int moveX);
-
 void SetStartMap(int(*mapArr)[BASICARRSIZE], int check)
 {
 	int posX = 0, posY = 0, randVal = 0;
@@ -42,7 +40,26 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 	*checkCanMove = 0;
 	*checkGameOver = 0;
 
+	int deleteInput = 0;
 	int userInput = 0;
+
+	if (_kbhit())
+	{
+		deleteInput = _getch();
+		while (1)
+		{
+			if (deleteInput == 224)
+			{
+				deleteInput = _getch();
+				if (deleteInput == 72 || deleteInput == 75 || deleteInput == 77 || deleteInput == 80)
+					break;
+			}
+			else
+				break;
+		}
+	}
+
+	printf("Push Your Arrow Btn : ");
 	userInput = _getch();
 
 	if (userInput == 27)
@@ -241,7 +258,7 @@ void SetAbsVal_RightLeft(int(*mapArr)[BASICARRSIZE], int posY)
 void PrintArr(int(*mapArr)[BASICARRSIZE], char *string)
 {
 	int checkNum = 0;
-	Sleep(500);
+	Sleep(200);
 	system("cls");
 	printf("\n   [123456score] 2048 [higestscore]  \n\n\n");
 	printf(" >> Now status '%s'\n\n", string);
