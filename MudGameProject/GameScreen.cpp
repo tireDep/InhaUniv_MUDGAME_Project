@@ -1,9 +1,10 @@
 #include "BasicHeader.h"
 #include "GameScreenHeader.h"
 
-int Update()
+int Update(int *checkPlay)
 {
 	int inputNum = 0;
+	int checkMaxNum = 0;
 	int checkCanMove = 0;
 	int checkGameOver = 0;
 	int kbhitCnt = 0;
@@ -12,28 +13,59 @@ int Update()
 
 	SetNewNum(mapArr, 0);
 	PrintArr(mapArr, "Start", &kbhitCnt);
-
+	// mapArr[1][1] = BASICARR_MAXNUM;
 	while (1)
 	{
-		PlayerInput(mapArr, &checkCanMove, &checkGameOver, &kbhitCnt);
+		PlayerInput(mapArr, &checkCanMove, &checkGameOver, &checkMaxNum, &kbhitCnt);
 
 		if (checkCanMove == 27)	// Pause
 		{
-			// 27 : esc Ascii, 1 : 1 Ascii
-			printf(">>Pause\n\nIf You Finish Game, push 'Esc'\nContinue Game, push 'AnyKey'\nInput : ");
-			if (CheckGameContinue(mapArr, &kbhitCnt))
-				return 0;
+			// continue : 1 / restart : 2 / exit : AnyKey
+			printf(">>Pause\n\n[Option]\n- If You Continue Game, push '1'\n- ReStart Game, push '2'\n- Exit Game, push 'AntKey'\n\nInput : ");
+			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay))
+			{
+				if (*checkPlay == 49)
+				{
+					PrintNewInput(mapArr, "1\n\n>> Continue Game\n\nReady to Continue : ", &kbhitCnt);
+					continue;
+				}
+				else
+					return 0;
+			}
 			else
-				continue;
+				return 0;
 		}
 
 		if (checkCanMove == 0 && checkGameOver == BASICARRSIZE * BASICARRSIZE)	// GameOver
 		{
-			printf("\n>> GameOver\n\nIf You Finish Game, push 'Esc'\nRevert Game, push 'AnyKey'\nInput : ");
-			if (CheckGameContinue(mapArr, &kbhitCnt))
-				return 0;
+			// continue : 1 / restart : 2 / exit : AnyKey
+			printf("\n>> GameOver\n\n[Option]\n- If You Revert Game, push '1'\n- ReStart Game, push '2'\n- Exit Game, push 'AntKey'\n\nInput : ");
+			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay))
+			{
+				if (*checkPlay == 49)
+				{
+					PrintNewInput(mapArr, "1\n\n>> Revert Game\n\nReady to Revert : ", &kbhitCnt);
+					continue;
+				}
+				else
+					return 0;
+			}
 			else
-				continue;
+				return 0;
+		}
+
+		if (checkMaxNum == BASICARR_MAXNUM)	// MaxNum in it
+		{
+			// restart : 1 or 2 / exit : AnyKey
+			// ※ : restart가 2번이라 1을 눌러도 2번으로 출력됨
+			printf("\n>> Congratulations!\n>> You Made a MaxNumber!\n\n[Option]\n- Start New Game, push '1' or '2'\n- Finish Game, push 'AnyKey'\n\nInput : ");
+			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay))
+			{
+				*checkPlay = 50;
+				return 0;
+			}
+			else
+				return 0;
 		}
 
 		if (checkCanMove != 0)	// Can Move
@@ -83,13 +115,15 @@ void SetNewNum(int(*mapArr)[BASICARRSIZE], int check)
 }
 
 // todo : 추후 리팩토링 다시할 예정
-void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOver, int *kbhitCnt)
+void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOver, int *checkMaxNum, int *kbhitCnt)
 {
 	*checkCanMove = 0;
 	*checkGameOver = 0;
+	*checkMaxNum = 0;
 
 	int userInput = 0;
 
+	CheckKbhitCnt(kbhitCnt);
 	DeleteInput(kbhitCnt);
 
 	printf("\nPush Your Arrow Btn : ");
@@ -113,11 +147,14 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 			{
 				for (int j = 0; j < BASICARRSIZE - 1; j++)
 				{
-					if (IsCanMove(mapArr, j, i, checkCanMove, checkGameOver, plusPos, zeroPos))
+					if (IsCanMove(mapArr, j, i, checkCanMove, checkGameOver, checkMaxNum, plusPos, zeroPos))
 						return;
 				}
 				if (mapArr[BASICARRSIZE-1][i] != 0)	// 맨 마지막 값 저장
 					(*checkGameOver)++;
+
+				if (mapArr[BASICARRSIZE - 1][i] == BASICARR_MAXNUM)	// 최댓값 확인
+					(*checkMaxNum) = BASICARR_MAXNUM;
 			}
 			// ------------------------------------------------
 			for (int posX = 0; posX < BASICARRSIZE; posX++)
@@ -142,11 +179,14 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 					if (j == BASICARRSIZE)
 						continue;
 
-					if (IsCanMove(mapArr,j,i,checkCanMove,checkGameOver,minusPos,zeroPos))
+					if (IsCanMove(mapArr,j,i,checkCanMove,checkGameOver, checkMaxNum, minusPos,zeroPos))
 						return;
 				}
 				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 맨 마지막 값 저장
 					(*checkGameOver)++;
+
+				if (mapArr[BASICARRSIZE - 1][i] == BASICARR_MAXNUM)	// 최댓값 확인
+					(*checkMaxNum) = BASICARR_MAXNUM;
 			}
 			// ------------------------------------------------
 			for (int posX = 0; posX < BASICARRSIZE; posX++)
@@ -168,11 +208,14 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 			{
 				for (int j = 0; j < BASICARRSIZE - 1; j++)
 				{
-					if (IsCanMove(mapArr, i, j, checkCanMove, checkGameOver, zeroPos, plusPos))
+					if (IsCanMove(mapArr, i, j, checkCanMove, checkGameOver, checkMaxNum, zeroPos, plusPos))
 						return;
 				}
-				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 맨 마지막 값 저장
+				if (mapArr[i][BASICARRSIZE - 1] != 0)	// 맨 마지막 값 저장
 					(*checkGameOver)++;
+
+				if (mapArr[i][BASICARRSIZE - 1] == BASICARR_MAXNUM)	// 최댓값 확인
+					(*checkMaxNum) = BASICARR_MAXNUM;
 			}
 			// ------------------------------------------------
 			for (int posY = 0; posY < BASICARRSIZE; posY++)
@@ -197,11 +240,14 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 					if (j == BASICARRSIZE)
 						continue;
 
-					if (IsCanMove(mapArr, i, j, checkCanMove, checkGameOver, zeroPos, minusPos))
+					if (IsCanMove(mapArr, i, j, checkCanMove, checkGameOver, checkMaxNum, zeroPos, minusPos))
 						return;
 				}
-				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 맨 마지막 값 저장
+				if (mapArr[i][BASICARRSIZE - 1] != 0)	// 맨 마지막 값 저장
 					(*checkGameOver)++;
+
+				if (mapArr[i][BASICARRSIZE - 1] == BASICARR_MAXNUM)	// 최댓값 확인
+					(*checkMaxNum) = BASICARR_MAXNUM;
 			}
 			// ------------------------------------------------
 			for (int posY = 0; posY < BASICARRSIZE; posY++)
@@ -223,11 +269,11 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 	}
 	else
 	{
-		printf("else Key\n");
+		printf("Wrong Btn\n");
 	}
 }
 
-bool IsCanMove(int (*mapArr)[BASICARRSIZE], int posY, int posX, int *checkCanMove, int *checkGameOver, int moveY, int moveX)
+bool IsCanMove(int (*mapArr)[BASICARRSIZE], int posY, int posX, int *checkCanMove, int *checkGameOver, int *checkMaxNum, int moveY, int moveX)
 {
 	if (mapArr[posY][posX] == 0 && mapArr[posY + moveY][posX + moveX] != 0)
 		(*checkCanMove)++;
@@ -240,6 +286,9 @@ bool IsCanMove(int (*mapArr)[BASICARRSIZE], int posY, int posX, int *checkCanMov
 	// 게임오버 체크
 	// 마지막 위치의 값은 함수 밖에서 체크되고 있음에 유의
 	// 후에 재작성 해볼것
+
+	if (mapArr[posY][posX] == BASICARR_MAXNUM)
+		(*checkMaxNum) = BASICARR_MAXNUM;
 	
 	if (checkCanMove == 0 && (*checkGameOver) == 16)
 		return TRUE;
@@ -334,18 +383,29 @@ void TextColor(int foreground, int background)
 	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
-bool CheckGameContinue(int(*mapArr)[4], int *kbhitCnt)
+bool CheckGameContinue(int(*mapArr)[4], int *kbhitCnt, int *checkPlay)
 {
-	if (_getch() == 27)
+	/*if (_getch() == 27)
 	{
 		printf("1\n\n>> Exit Game\n\n");
 		return TRUE;
+	}*/
+	// continue : 1 / restart : 2 / exit : AnyKey
+	int inputNum = 0;
+	inputNum = _getch();
+
+	if (inputNum == 49)
+	{
+		*checkPlay = 49;
+		return TRUE;
+	}
+	else if (inputNum == 50)
+	{
+		*checkPlay = 50;
+		return TRUE;
 	}
 	else
-	{
-		PrintNewInput(mapArr, "AnyKey\n\n>> Revert Game\n\nReady to New Input : ", kbhitCnt);
 		return FALSE;
-	}
 }
 
 void CheckKbhitCnt(int *kbhitCnt)
