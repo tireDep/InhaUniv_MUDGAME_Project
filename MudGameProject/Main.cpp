@@ -3,9 +3,12 @@
 
 int main()
 {
+	FILE *openFp = NULL;
+	int saveScore = 0;
 	int checkPlay = 0;
+
 	srand((unsigned)time(NULL));
-	system("mode con cols=39 lines=39");
+	system("mode con cols=44 lines=41");
 
 	// todo : 메인화면 및 튜토리얼
 	// - 게임 시작
@@ -37,7 +40,7 @@ int main()
 	// - 점수 계산, 최고점 계산
 	// +) Maybe : 장애물 생성 맵, 맵 크기 확장, 랭킹, 이동 O,X 시 효과음
 	
-	Update(&checkPlay);
+	Update(&checkPlay, &saveScore);
 	while (checkPlay >= 0)
 	{
 		if (checkPlay == 50)
@@ -45,15 +48,62 @@ int main()
 			printf("2\n\n>> ReStart Game\n\nReady to New Game : ");
 			for (int i = 5; i > 0; i--)
 			{
-				Sleep(500);
+				Sleep(100);
 				printf("%d ", i);
 			}
 			checkPlay = 0;
-			Update(&checkPlay);
+			Update(&checkPlay, &saveScore);
 		}
 		else
 		{
-			puts("AnyKey\n\n>> Game Exit\n");
+			if (saveScore < 0)
+			{
+				printf("AnyKey\n\n");
+				
+				// ---------------------------------
+
+				system("cls");
+				saveScore = abs(saveScore);
+
+				fopen_s(&openFp, "HighestScore.dat", "wb");
+				if (openFp == NULL)
+				{
+					puts("FileError!");
+					return 0;
+				}
+				fwrite(&saveScore, sizeof(int), 1, openFp);	// 바이너리 파일은 fwrite로 써야함!
+				fclose(openFp);
+
+				printf("\n\n                [ RESULT ]\n\n");
+				printf("\n>> Congratulations!\n>> You get a New High Score\n\n Score : %d\n\n", saveScore);
+
+				// 시작화면 or 게임화면 or 종료 조건 추가
+			}
+			else
+			{
+				printf("AnyKey\n\n");
+
+				// ---------------------------------
+
+				system("cls");
+
+				/*
+				fopen_s(&openFp, "HighestScore.dat", "wb");
+				if (openFp == NULL)
+				{
+					puts("FileError!");
+					return 0;
+				}
+				fwrite(&saveScore, sizeof(int), 1, openFp);	// 바이너리 파일은 fwrite로 써야함!
+				fclose(openFp);
+				*/
+				printf("\n\n                [ RESULT ]\n\n");
+				printf("\n>> You're Score\n\nscore : %d\n\n", saveScore);
+				// 시작화면 or 게임화면 or 종료 조건 추가
+			}
+			puts(">> Game Exit\n");
+			_getch();	// 릴리즈시 바로꺼짐 해결_1
+			//system("pause > nul");	// 릴리즈시 바로꺼짐 해결_2
 			return 0;
 		}
 	}

@@ -1,11 +1,12 @@
 #pragma once
 
 #include<stdio.h>
-#include<conio.h>
+#include<conio.h>	// _getch()
 #include<time.h>
 #include<stdlib.h>
 #include<Windows.h>
 #include<math.h>
+#include<io.h>	// _access()
 
 #define BLACK 0 
 #define WHITE 15
