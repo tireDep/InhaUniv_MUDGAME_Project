@@ -57,36 +57,26 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 		{
 		case 72:
 			// ------------------------------------------------
+			// IsCanMove() 
 			*checkCanMove = 0;
 			for (int i = 0; i < BASICARRSIZE; i++)
 			{
 				for (int j = 0; j < BASICARRSIZE - 1; j++)
 				{		
 					if (mapArr[j][i] == 0 && mapArr[j + 1][i] != 0)
-					{
-						// printf("front0>>>>%d J:%d I:%d\n", mapArr[j][i], j + 1, i);
 						(*checkCanMove)++;
-					}
 					if (mapArr[j][i] == mapArr[j + 1][i] && mapArr[j][i] != 0)
-					{
-						// printf("sameNum>>>>%d J:%d I:%d\n", mapArr[j][i], j + 1, i);
 						(*checkCanMove)++;
-					}
+					
+					if (mapArr[j][i] != 0)
+						(*checkGameOver)++;
 				}
+				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 마지막 위치 값 판별
+					(*checkGameOver)++;
 			}
 
 			// ------------------------------------------------
 			// 게임오버 조건 추가
-			for (int i = 0; i < BASICARRSIZE; i++)
-			{
-				for (int j = 0; j < BASICARRSIZE; j++)
-				{
-					if (mapArr[j][i] != 0)
-					{
-						(*checkGameOver)++;
-					}
-				}
-			}
 			if (checkCanMove == 0 && (*checkGameOver) == 16)
 				return;
 			if (checkCanMove == 0)
@@ -117,31 +107,18 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 						continue;
 
 					if (mapArr[j][i] == 0 && mapArr[j - 1][i] != 0)
-					{
-						// printf("front0>>>>%d J:%d I:%d\n", mapArr[j][i], j + 1, i);
 						(*checkCanMove)++;
-					}
 					if (mapArr[j][i] == mapArr[j - 1][i] && mapArr[j][i] != 0)
-					{
-						// printf("sameNum>>>>%d J:%d I:%d\n", mapArr[j][i], j + 1, i);
 						(*checkCanMove)++;
-					}
+
+					if (mapArr[j][i] != 0)
+						(*checkGameOver)++;
 				}
+				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 마지막 위치 값 판별
+					(*checkGameOver)++;
 			}
-
-
 			// ------------------------------------------------
 			// 게임오버 조건 추가
-			for (int i = 0; i < BASICARRSIZE; i++)
-			{
-				for (int j = 0; j < BASICARRSIZE; j++)
-				{
-					if (mapArr[j][i] != 0)
-					{
-						(*checkGameOver)++;
-					}
-				}
-			}
 			if (checkCanMove == 0 && (*checkGameOver) == 16)
 				return;
 			if (checkCanMove == 0)
@@ -169,30 +146,19 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 				for (int j = 0; j < BASICARRSIZE - 1; j++)
 				{
 					if (mapArr[i][j] == 0 && mapArr[i][j + 1] != 0)
-					{
-						//printf("front0>>>>%d J:%d I:%d\n", mapArr[i][j], j, i+1);
 						(*checkCanMove)++;
-					}
 					if (mapArr[i][j] == mapArr[i][j + 1] && mapArr[i][j] != 0)
-					{
-						//printf("sameNum>>>>%d J:%d I:%d\n", mapArr[i][j], j, i + 1);
 						(*checkCanMove)++;
-					}
+
+					if (mapArr[j][i] != 0)
+						(*checkGameOver)++;
 				}
+				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 마지막 위치 값 판별
+					(*checkGameOver)++;
 			}
 
 			// ------------------------------------------------
 			// 게임오버 조건 추가
-			for (int i = 0; i < BASICARRSIZE; i++)
-			{
-				for (int j = 0; j < BASICARRSIZE; j++)
-				{
-					if (mapArr[i][j] != 0)
-					{
-						(*checkGameOver)++;
-					}
-				}
-			}
 			if (checkCanMove == 0 && (*checkGameOver) == 16)
 				return;
 			if (checkCanMove == 0)
@@ -223,30 +189,19 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 						continue;
 
 					if (mapArr[i][j] == 0 && mapArr[i][j - 1] != 0)
-					{
-						//printf("front0>>>>%d J:%d I:%d\n", mapArr[i][j], j, i + 1);
 						(*checkCanMove)++;
-					}
 					if (mapArr[i][j] == mapArr[i][j - 1] && mapArr[i][j] != 0)
-					{
-						//printf("sameNum>>>>%d J:%d I:%d\n", mapArr[i][j], j, i + 1);
 						(*checkCanMove)++;
-					}
+
+					if (mapArr[j][i] != 0)
+						(*checkGameOver)++;
 				}
+				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 마지막 위치 값 판별
+					(*checkGameOver)++;
 			}
 
 			// ------------------------------------------------
 			// 게임오버 조건 추가
-			for (int i = 0; i < BASICARRSIZE; i++)
-			{
-				for (int j = 0; j < BASICARRSIZE; j++)
-				{
-					if (mapArr[j][i] != 0)
-					{
-						(*checkGameOver)++;
-					}
-				}
-			}
 			if (checkCanMove == 0 && (*checkGameOver) == 16)
 				return;
 			if (checkCanMove == 0)

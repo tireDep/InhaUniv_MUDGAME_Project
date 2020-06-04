@@ -4,7 +4,7 @@
 int main()
 {
 	srand((unsigned)time(NULL));
-	system("mode con cols=39 lines=26");
+	system("mode con cols=39 lines=28");
 
 	int checkCanMove = 0;
 	int checkGameOver = 0;
@@ -22,7 +22,7 @@ int main()
 			puts("게임 종료");
 			return 0;
 		}
-		printf("%d\n", checkGameOver);
+		// printf("%d\n", checkGameOver);
 		if (checkCanMove == 0 && checkGameOver == BASICARRSIZE * BASICARRSIZE)
 		{
 			puts("게임오버");
