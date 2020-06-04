@@ -22,7 +22,6 @@ int main()
 			puts("게임 종료");
 			return 0;
 		}
-		// printf("%d\n", checkGameOver);
 		if (checkCanMove == 0 && checkGameOver == BASICARRSIZE * BASICARRSIZE)
 		{
 			puts("게임오버");
