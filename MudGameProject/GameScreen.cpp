@@ -59,12 +59,12 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 		}
 	}
 
-	printf("Push Your Arrow Btn : ");
+	printf("\nPush Your Arrow Btn : ");
 	userInput = _getch();
 
 	if (userInput == 27)
 	{
-		puts("Input Esc\n");
+		puts("Esc\n");
 		*checkCanMove = 27;
 		return;
 	}
