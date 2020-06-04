@@ -1,6 +1,8 @@
 #include "BasicHeader.h"
 #include "GameScreenHeader.h"
 
+bool IsCanMove(int(*mapArr)[BASICARRSIZE], int posY, int posX, int *checkCanMove, int *checkGameOver, int moveY, int moveX);
+
 void SetStartMap(int(*mapArr)[BASICARRSIZE], int check)
 {
 	int posX = 0, posY = 0, randVal = 0;
@@ -57,32 +59,17 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 		{
 		case 72:
 			// ------------------------------------------------
-			// IsCanMove() 
-			*checkCanMove = 0;
 			for (int i = 0; i < BASICARRSIZE; i++)
 			{
 				for (int j = 0; j < BASICARRSIZE - 1; j++)
-				{		
-					if (mapArr[j][i] == 0 && mapArr[j + 1][i] != 0)
-						(*checkCanMove)++;
-					if (mapArr[j][i] == mapArr[j + 1][i] && mapArr[j][i] != 0)
-						(*checkCanMove)++;
-					
-					if (mapArr[j][i] != 0)
-						(*checkGameOver)++;
+				{
+					if (IsCanMove(mapArr, j, i, checkCanMove, checkGameOver, plusPos, setZero))
+						return;
 				}
-				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 마지막 위치 값 판별
+				if (mapArr[BASICARRSIZE-1][i] != 0)	// 맨 마지막 값 저장
 					(*checkGameOver)++;
 			}
-
 			// ------------------------------------------------
-			// 게임오버 조건 추가
-			if (checkCanMove == 0 && (*checkGameOver) == 16)
-				return;
-			if (checkCanMove == 0)
-				return;
-			// ------------------------------------------------
-
 			for (int posX = 0; posX < BASICARRSIZE; posX++)
 			{
 				for (int posY = 0; posY < BASICARRSIZE; posY++)
@@ -93,12 +80,11 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 				}
 				SetAbsVal_UpDown(mapArr, posX);
 			}
-			//PrintArr(mapArr, "Move to Up");
+			PrintArr(mapArr, "Move to Up");
 			break;
 
 		case 80:
 			// -------------------------------------------------------
-			*checkCanMove = 0;
 			for (int i = 0; i < BASICARRSIZE; i++)
 			{
 				for (int j = BASICARRSIZE; j > 0; j--)
@@ -106,25 +92,13 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 					if (j == BASICARRSIZE)
 						continue;
 
-					if (mapArr[j][i] == 0 && mapArr[j - 1][i] != 0)
-						(*checkCanMove)++;
-					if (mapArr[j][i] == mapArr[j - 1][i] && mapArr[j][i] != 0)
-						(*checkCanMove)++;
-
-					if (mapArr[j][i] != 0)
-						(*checkGameOver)++;
+					if (IsCanMove(mapArr,j,i,checkCanMove,checkGameOver,minusPos,setZero))
+						return;
 				}
-				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 마지막 위치 값 판별
+				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 맨 마지막 값 저장
 					(*checkGameOver)++;
 			}
 			// ------------------------------------------------
-			// 게임오버 조건 추가
-			if (checkCanMove == 0 && (*checkGameOver) == 16)
-				return;
-			if (checkCanMove == 0)
-				return;
-			// ------------------------------------------------
-
 			for (int posX = 0; posX < BASICARRSIZE; posX++)
 			{
 				for (int posY = BASICARRSIZE; posY >= 0; posY--)
@@ -140,31 +114,17 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 
 		case 75:
 			// -------------------------------------------------------
-			*checkCanMove = 0;
 			for (int i = 0; i < BASICARRSIZE; i++)
 			{
 				for (int j = 0; j < BASICARRSIZE - 1; j++)
 				{
-					if (mapArr[i][j] == 0 && mapArr[i][j + 1] != 0)
-						(*checkCanMove)++;
-					if (mapArr[i][j] == mapArr[i][j + 1] && mapArr[i][j] != 0)
-						(*checkCanMove)++;
-
-					if (mapArr[j][i] != 0)
-						(*checkGameOver)++;
+					if (IsCanMove(mapArr, i, j, checkCanMove, checkGameOver, setZero, plusPos))
+						return;
 				}
-				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 마지막 위치 값 판별
+				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 맨 마지막 값 저장
 					(*checkGameOver)++;
 			}
-
 			// ------------------------------------------------
-			// 게임오버 조건 추가
-			if (checkCanMove == 0 && (*checkGameOver) == 16)
-				return;
-			if (checkCanMove == 0)
-				return;
-			// ------------------------------------------------
-
 			for (int posY = 0; posY < BASICARRSIZE; posY++)
 			{
 				for (int posX = 0; posX < BASICARRSIZE; posX++)
@@ -180,34 +140,20 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 
 		case 77:
 			// ------------------------------------------------
-			*checkCanMove = 0;
 			for (int i = 0; i < BASICARRSIZE; i++)
 			{
-				for (int j = BASICARRSIZE; j > 0 ; j--)
+				for (int j = BASICARRSIZE; j > 0; j--)
 				{
 					if (j == BASICARRSIZE)
 						continue;
 
-					if (mapArr[i][j] == 0 && mapArr[i][j - 1] != 0)
-						(*checkCanMove)++;
-					if (mapArr[i][j] == mapArr[i][j - 1] && mapArr[i][j] != 0)
-						(*checkCanMove)++;
-
-					if (mapArr[j][i] != 0)
-						(*checkGameOver)++;
+					if (IsCanMove(mapArr, i, j, checkCanMove, checkGameOver, setZero, minusPos))
+						return;
 				}
-				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 마지막 위치 값 판별
+				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 맨 마지막 값 저장
 					(*checkGameOver)++;
 			}
-
 			// ------------------------------------------------
-			// 게임오버 조건 추가
-			if (checkCanMove == 0 && (*checkGameOver) == 16)
-				return;
-			if (checkCanMove == 0)
-				return;
-			// ------------------------------------------------
-
 			for (int posY = 0; posY < BASICARRSIZE; posY++)
 			{
 				for (int posX = BASICARRSIZE; posX >= 0; posX--)
@@ -229,6 +175,28 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 	{
 		printf("else Key\n");
 	}
+}
+
+bool IsCanMove(int (*mapArr)[BASICARRSIZE], int posY, int posX, int *checkCanMove, int *checkGameOver, int moveY, int moveX)
+{
+	if (mapArr[posY][posX] == 0 && mapArr[posY + moveY][posX + moveX] != 0)
+		(*checkCanMove)++;
+	if (mapArr[posY][posX] == mapArr[posY + moveY][posX + moveX] && mapArr[posY][posX] != 0)
+		(*checkCanMove)++;
+	// 이동 가능 체크
+
+	if (mapArr[posY][posX] != 0)
+		(*checkGameOver)++;
+	// 게임오버 체크
+	// 마지막 위치의 값은 함수 밖에서 체크되고 있음에 유의
+	// 후에 재작성 해볼것
+	
+	if (checkCanMove == 0 && (*checkGameOver) == 16)
+		return TRUE;
+	if (checkCanMove == 0)
+		return TRUE;
+
+	return FALSE;
 }
 
 void MoveToInput(int(*mapArr)[BASICARRSIZE], int *posY, int *posX, int moveY, int moveX, int setStart, int setNext, int moveTo)
