@@ -1,7 +1,7 @@
 #pragma once
 
 #include<stdio.h>
-#include<conio.h>	// _getch()
+#include<conio.h>
 #include<time.h>
 #include<stdlib.h>
 #include<Windows.h>

@@ -3,6 +3,7 @@
 
 int Update(int *checkPlay)
 {
+	// todo : 최고점수 불러와야함
 	int inputNum = 0;
 	int checkMaxNum = 0;
 	int checkCanMove = 0;
@@ -30,10 +31,12 @@ int Update(int *checkPlay)
 					continue;
 				}
 				else
-					return 0;
+					return 0; 
 			}
 			else
 				return 0;
+			// todo : 최고점수 저장_게임이 종료 될 경우
+			// main으로 넘겨서 해야할 수 도?
 		}
 
 		if (checkCanMove == 0 && checkGameOver == BASICARRSIZE * BASICARRSIZE)	// GameOver
@@ -52,6 +55,8 @@ int Update(int *checkPlay)
 			}
 			else
 				return 0;
+			// todo : 최고점수 저장_게임이 종료 될 경우
+			// main으로 넘겨서 해야할 수 도?
 		}
 
 		if (checkMaxNum == BASICARR_MAXNUM)	// MaxNum in it
@@ -66,6 +71,8 @@ int Update(int *checkPlay)
 			}
 			else
 				return 0;
+			// todo : 최고점수 저장_게임이 종료 될 경우
+			// main으로 넘겨서 해야할 수 도?
 		}
 
 		if (checkCanMove != 0)	// Can Move
@@ -316,6 +323,9 @@ void MoveToInput(int(*mapArr)[BASICARRSIZE], int *posY, int *posX, int moveY, in
 		{
 			mapArr[*posY + moveY][*posX + moveX] = -(2 * mapArr[*posY][*posX]);
 			mapArr[*posY][*posX] = zeroPos;
+			// todo : 점수 계산
+			// 점수계산은 합쳐진 값 만큼 누적됨
+			// 최고점과 현재 점수 비교 필요
 
 			if (moveTo == upDownPos)
 				*posY += setNext;
@@ -339,6 +349,7 @@ void SetAbsVal_RightLeft(int(*mapArr)[BASICARRSIZE], int posY)
 
 void PrintArr(int(*mapArr)[BASICARRSIZE], char *string, int *kbhitCnt)
 {
+	// todo : 점수 출력
 	int checkNum = 0;
 	Sleep(200);
 	system("cls");
@@ -385,11 +396,6 @@ void TextColor(int foreground, int background)
 
 bool CheckGameContinue(int(*mapArr)[4], int *kbhitCnt, int *checkPlay)
 {
-	/*if (_getch() == 27)
-	{
-		printf("1\n\n>> Exit Game\n\n");
-		return TRUE;
-	}*/
 	// continue : 1 / restart : 2 / exit : AnyKey
 	int inputNum = 0;
 	inputNum = _getch();
