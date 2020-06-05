@@ -4,6 +4,8 @@
 
 int main()
 {
+	srand((unsigned)time(NULL));
+
 	bool isPlay;
 	bool isHighScore;
 	int nowScore;
@@ -11,7 +13,6 @@ int main()
 	int saveScore;
 	int checkPlay = startGame;
 
-	srand((unsigned)time(NULL));
 	system("mode con cols=44 lines=41");
 	CursorView(0);
 
@@ -47,7 +48,7 @@ int main()
 		if (checkPlay == gameExit)
 			break;
 	
-		else if (checkPlay == mainScene)
+		if (checkPlay == mainScene)
 		{
 			system("cls");
 			// 메인화면 구현
@@ -65,7 +66,7 @@ int main()
 			printf("       Press Another Button is EXIT..\n\n");
 			
 			inputNum = _getch();
-			if (inputNum == inputNum_1)
+/*			if (inputNum == inputNum_1)
 				checkPlay = gameScene;	// 게임시작 선택시
 			else if (inputNum == inputNum_2)
 			{
@@ -78,10 +79,10 @@ int main()
 					checkPlay = mainScene;
 			}
 			else
-				checkPlay = gameExit;
+				checkPlay = gameExit;*/
 		}
-
-		else if (checkPlay == gameScene)
+		checkPlay = gameScene;	// 게임시작 선택시
+		if (checkPlay == gameScene)
 		{
 			SetValue(&nowScore, &saveScore, &checkPlay, &isPlay, &isHighScore);
 			Start(&highestScore);
@@ -98,7 +99,7 @@ int main()
 			}
 		}
 
-		else if (checkPlay == resultScene)
+		if (checkPlay == resultScene)
 		{
 			if (saveScore < 0)
 			{
