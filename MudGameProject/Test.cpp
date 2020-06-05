@@ -9,7 +9,6 @@
 // 3*3 = 1,024 / 4*4 = 131,072 / 5*5 = 67,108,864(65,536) / 6*6 이상은 숫자가 너무 큼
 enum MovePos { rightMove = 1, leftMove = 1, upMove = 1, downMove = 1 };
 
-
 void PrintArr(int(*mapArr)[ARRSIZE], char *string);
 
 int main()
