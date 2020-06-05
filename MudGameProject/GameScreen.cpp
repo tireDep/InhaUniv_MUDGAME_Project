@@ -62,8 +62,6 @@ int Update(int *checkPlay, int *saveScore)
 					*saveScore = nowScore;
 				return 0;
 			}
-			// todo : 최고점수 저장_게임이 종료 될 경우
-			// main으로 넘겨서 해야할 수 도?
 		}
 
 		if (checkCanMove == 0 && checkGameOver == BASICARRSIZE * BASICARRSIZE)	// GameOver
@@ -88,8 +86,6 @@ int Update(int *checkPlay, int *saveScore)
 			}
 			else
 				return 0;
-			// todo : 최고점수 저장_게임이 종료 될 경우
-			// main으로 넘겨서 해야할 수 도?
 		}
 
 		if (checkMaxNum == BASICARR_MAXNUM)	// MaxNum in it
@@ -111,8 +107,6 @@ int Update(int *checkPlay, int *saveScore)
 					*saveScore = nowScore;
 				return 0;
 			}
-			// todo : 최고점수 저장_게임이 종료 될 경우
-			// main으로 넘겨서 해야할 수 도?
 		}
 
 		if (checkCanMove != 0)	// Can Move
@@ -368,9 +362,6 @@ void MoveToInput(int(*mapArr)[BASICARRSIZE], int *posY, int *posX, int moveY, in
 			mapArr[*posY + moveY][*posX + moveX] = -(2 * mapArr[*posY][*posX]);
 			mapArr[*posY][*posX] = zeroPos;
 
-			// todo : 점수 계산
-			// 점수계산은 합쳐진 값 만큼 누적됨
-			// 최고점과 현재 점수 비교 필요
 			*nowScore += abs(mapArr[*posY + moveY][*posX + moveX]);	// 중복 합침 막기위해 음수처리 해서 절대값화
 			if (*nowScore > *highestScore)
 			{
@@ -399,7 +390,6 @@ void SetAbsVal_RightLeft(int(*mapArr)[BASICARRSIZE], int posY)
 
 void PrintArr(int(*mapArr)[BASICARRSIZE], char *string, int *kbhitCnt, int *nowScore, int *highestScore)
 {
-	// todo : 점수 출력
 	int checkNum = 0;
 	Sleep(200);
 	system("cls");
