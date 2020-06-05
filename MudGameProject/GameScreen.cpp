@@ -1,6 +1,15 @@
 #include "BasicHeader.h"
 #include "GameScreenHeader.h"
 
+void SetValue(int *nowScore, int *saveScore, int *checkPlay, bool *isPlay, bool *isHighScore)
+{
+	*nowScore = 0;
+	*saveScore = 0;
+	*checkPlay = 0;
+	*isPlay = TRUE;
+	*isHighScore = TRUE;
+}
+
 int Start(int *highestScore)
 {
 	FILE *openFp = NULL;
@@ -401,6 +410,64 @@ void SetAbsVal_RightLeft(int(*mapArr)[BASICARRSIZE], int posY)
 		mapArr[posY][i] = abs(mapArr[posY][i]);
 }
 
+bool CheckGameContinue(int(*mapArr)[4], int *kbhitCnt, int *checkPlay)
+{
+	// Continue : 1 / Restart & Revert : 2 / GameOver : AnyKey
+	int inputNum = 0;
+	inputNum = _getch();
+
+	if (inputNum == inputNum_1)
+	{
+		*checkPlay = inputNum_1;
+		return TRUE;
+	}
+	else if (inputNum == inputNum_2)
+	{
+		*checkPlay = inputNum_2;
+		return TRUE;
+	}
+	else
+		return FALSE;
+}
+
+/*
+---------- 입력무시(삭제) 함수 ----------
+*/
+
+void CheckKbhitCnt(int *kbhitCnt)
+{
+	if (_kbhit())
+		(*kbhitCnt)++;
+}
+
+void DeleteInput(int *kbhitCnt)
+{
+	int deleteInput = 0;
+	rewind(stdin);
+
+	while (*kbhitCnt>0)
+	{
+		deleteInput = _getch();
+		while (1)
+		{
+			if (deleteInput == 224)
+			{
+				deleteInput = _getch();
+				if (deleteInput == 72 || deleteInput == 75 || deleteInput == 77 || deleteInput == 80)
+					break;
+			}
+			else
+				break;
+		}
+		(*kbhitCnt)--;
+	}
+}
+
+
+/*
+---------- 출력관련 함수 ----------
+*/
+
 void PrintArr(int(*mapArr)[BASICARRSIZE], char *string, int *kbhitCnt, int *nowScore, int *highestScore)
 {
 	int checkNum = 0;
@@ -445,61 +512,6 @@ void PrintArr(int(*mapArr)[BASICARRSIZE], char *string, int *kbhitCnt, int *nowS
 	puts("    -------- -------- -------- --------");
 }
 
-void TextColor(int foreground, int background)
-{
-	int color = foreground + background * 16;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
-}
-
-bool CheckGameContinue(int(*mapArr)[4], int *kbhitCnt, int *checkPlay)
-{
-	// Continue : 1 / Restart & Revert : 2 / GameOver : AnyKey
-	int inputNum = 0;
-	inputNum = _getch();
-
-	if (inputNum == inputNum_1)
-	{
-		*checkPlay = inputNum_1;
-		return TRUE;
-	}
-	else if (inputNum == inputNum_2)
-	{
-		*checkPlay = inputNum_2;
-		return TRUE;
-	}
-	else
-		return FALSE;
-}
-
-void CheckKbhitCnt(int *kbhitCnt)
-{
-	if (_kbhit())
-		(*kbhitCnt)++;
-}
-
-void DeleteInput(int *kbhitCnt)
-{
-	int deleteInput = 0;
-	rewind(stdin);
-
-	while (*kbhitCnt>0)
-	{
-		deleteInput = _getch();
-		while (1)
-		{
-			if (deleteInput == 224)
-			{
-				deleteInput = _getch();
-				if (deleteInput == 72 || deleteInput == 75 || deleteInput == 77 || deleteInput == 80)
-					break;
-			}
-			else
-				break;
-		}
-		(*kbhitCnt)--;
-	}
-}
-
 void PrintNewInput(int(*mapArr)[4], char *string, int *kbhitCnt, int *nowScore, int *highestScore)
 {
 	printf("%s", string);
@@ -513,6 +525,12 @@ void PrintNewInput(int(*mapArr)[4], char *string, int *kbhitCnt, int *nowScore, 
 		DeleteInput(kbhitCnt);
 	}
 	PrintArr(mapArr, "NewInput", kbhitCnt, nowScore, highestScore);
+}
+
+void TextColor(int foreground, int background)
+{
+	int color = foreground + background * 16;
+	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
 void CursorView(char show)
