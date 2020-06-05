@@ -18,3 +18,5 @@ void PrintNewInput(int(*mapArr)[4], char *string, int *kbhitCnt, int *nowScore, 
 
 void DeleteInput(int *kbhitCnt);
 void CheckKbhitCnt(int *kbhitCnt);
+
+void CursorView(char show);

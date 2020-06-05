@@ -3,20 +3,15 @@
 
 int Update(int *checkPlay, int *saveScore)
 {
-	// todo : 최고점수 불러와야함
 	FILE *openFp = NULL;
 	int prevScore = 0;
 	int highestScore = 0;
 	int nowScore = 0;
 
 	if (_access("./HighestScore.dat", 00) == 0)	// 파일이 존재하는 경우
-	{
-		fopen_s(&openFp, "HighestScore.dat", "rb");	// 첫 실행시 존재하지 x 이기 때문에 rb+ // 지금 실행 x
-	}
+		fopen_s(&openFp, "HighestScore.dat", "rb");
 	else
-	{
 		fopen_s(&openFp, "HighestScore.dat", "wb");
-	}
 
 	if (openFp == NULL)
 	{
@@ -41,6 +36,7 @@ int Update(int *checkPlay, int *saveScore)
 	// mapArr[1][1] = BASICARR_MAXNUM;
 	while (1)
 	{
+		// CursorView(1);
 		PlayerInput(mapArr, &checkCanMove, &checkGameOver, &checkMaxNum, &kbhitCnt, &nowScore, &highestScore);
 
 		if (checkCanMove == 27)	// Pause
@@ -177,7 +173,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 	CheckKbhitCnt(kbhitCnt);
 	DeleteInput(kbhitCnt);
 
-	printf("\nPush Your Arrow Btn : ");
+	printf("\nPush Your Button : ");
 	userInput = _getch();
 
 	if (userInput == 27)
@@ -193,6 +189,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 		switch (userInput)
 		{
 		case 72:
+			printf("Up Arrow");
 			// ------------------------------------------------
 			for (int i = 0; i < BASICARRSIZE; i++)
 			{
@@ -222,6 +219,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 			break;
 
 		case 80:
+			printf("Down Arrow");
 			// -------------------------------------------------------
 			for (int i = 0; i < BASICARRSIZE; i++)
 			{
@@ -254,6 +252,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 			break;
 
 		case 75:
+			printf("Left Arrow");
 			// -------------------------------------------------------
 			for (int i = 0; i < BASICARRSIZE; i++)
 			{
@@ -283,6 +282,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 			break;
 
 		case 77:
+			printf("Right Arrow");
 			// ------------------------------------------------
 			for (int i = 0; i < BASICARRSIZE; i++)
 			{
@@ -510,4 +510,16 @@ void PrintNewInput(int(*mapArr)[4], char *string, int *kbhitCnt, int *nowScore, 
 		DeleteInput(kbhitCnt);
 	}
 	PrintArr(mapArr, "NewInput", kbhitCnt, nowScore, highestScore);
+}
+void CursorView(char show)//커서숨기기
+{
+	HANDLE hConsole;
+	CONSOLE_CURSOR_INFO ConsoleCursor;
+
+	hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+
+	ConsoleCursor.bVisible = show;
+	ConsoleCursor.dwSize = 1;
+
+	SetConsoleCursorInfo(hConsole, &ConsoleCursor);
 }

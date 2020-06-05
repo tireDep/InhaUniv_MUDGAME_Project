@@ -9,6 +9,7 @@ int main()
 
 	srand((unsigned)time(NULL));
 	system("mode con cols=44 lines=41");
+	CursorView(0);
 
 	// todo : 메인화면 및 튜토리얼
 	// - 게임 시작
