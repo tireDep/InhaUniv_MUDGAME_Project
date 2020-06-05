@@ -50,35 +50,34 @@ int main()
 		if (checkPlay == gameExit)
 			break;
 	
-		if (checkPlay == mainScene)
+		else if (checkPlay == mainScene)
 		{
 			// 메인화면 구현
 			system("cls");
 			puts("------------------메인화면 구현해야함-----------");
 			Sleep(500);
 			
-			checkPlay = gameScene;
+			checkPlay = gameScene;	// 게임시작 선택시
 		}
 
-		if (checkPlay == gameScene)
+		else if (checkPlay == gameScene)
 		{
 			SetValue(&nowScore, &saveScore, &checkPlay, &isPlay, &isHighScore);
 			Start(&highestScore);
 			Update(&checkPlay, &saveScore, &nowScore, &highestScore);
-			printf("2\n\n>> ReStart Game\n\nReady to New Game : ");
-			for (int i = 5; i > 0; i--)
+			
+			if (checkPlay == gameScene)
 			{
-				Sleep(100);
-				printf("%d ", i);
+				printf("2\n\n>> ReStart Game\n\nReady to New Game : ");
+				for (int i = 5; i > 0; i--)
+				{
+					Sleep(100);
+					printf("%d ", i);
+				}
 			}
-			//checkPlay = 0;
-			//Update(&checkPlay, &saveScore, &nowScore, &highestScore);
 		}
+
 		else if (checkPlay == resultScene)
-		{
-			ResultScreen(&isHighScore, &isPlay, &saveScore, &checkPlay);
-		}
-		else
 		{
 			if (saveScore < 0)
 			{
@@ -99,7 +98,7 @@ int main()
 					continue;
 			}
 		}
-	}
+	}	// while()
 
 	puts("\n\n>> Game Exit\n");
 	_getch();

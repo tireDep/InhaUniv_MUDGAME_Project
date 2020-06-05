@@ -69,7 +69,7 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore)
 			printf("\n>> GameOver\n\n[ OPTION ]\n- If You Revert Game, push '1'\n- ReStart Game, push '2'\n- Game Over, push 'AntKey'\n\nInput : ");
 			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay))
 			{
-				if (*checkPlay == inputNum_2)
+				if (*checkPlay == inputNum_1)
 				{
 					PrintNewInput(mapArr, "1\n\n>> Revert Game\n\nReady to Revert : ", &kbhitCnt, nowScore, highestScore);
 					continue;
@@ -91,22 +91,30 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore)
 		if (checkMaxNum == BASICARR_MAXNUM)	// MaxNum in it
 		{
 			// restart : 1 or 2 / exit : AnyKey
-			// ※ : restart가 2번이라 1을 눌러도 2번으로 출력됨
-			printf("\n>> Congratulations!\n>> You Made a MaxNumber!\n\n[ OPTION ]\n- Start New Game, push '1' or '2'\n- Finish Game, push 'AnyKey'\n\nInput : ");
+			// todo : 메인화면 돌아가기 추가
+			printf("\n>> Congratulations!\n>> You Made a MaxNumber!\n\n[ OPTION ]\n- Go to Main, push '1'\n- Start New Game, push '2'\n- Finish Game, push 'AnyKey'\n\nInput : ");
 			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay))
 			{
-				*checkPlay = gameScene;
-				return 0;
+				if (*checkPlay == inputNum_1)
+					*checkPlay = mainScene;
+				else
+				{
+					*checkPlay = gameScene;
+					if (prevScore < *highestScore)
+						*saveScore = -(*highestScore);	// 최댓값 갱신을 알리기 위한 음수화
+					else
+						*saveScore = *nowScore;
+				}
 			}
 			else
 			{
-				*checkPlay = resultScene;	// 게임화면 출력
+				*checkPlay = resultScene;
 				if (prevScore < *highestScore)
 					*saveScore = -(*highestScore);	// 최댓값 갱신을 알리기 위한 음수화
 				else
 					*saveScore = *nowScore;
-				return 0;
 			}
+			return 0;
 		}
 
 		if (checkCanMove != 0)	// Can Move
