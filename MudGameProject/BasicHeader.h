@@ -17,5 +17,8 @@
 enum MovePos { stayMove = 0, rightMove = 1, leftMove = -1, upMove = -1, downMove = 1 };
 enum NextPos { zeroPos = 0, arrSizePos = BASICARRSIZE, plusPos = 1, minusPos = -1 };
 enum CheckPos { upDownPos = 0, leftRightPos = 1 };
-enum CheckScene {mainScene = 0, gameScene = 50, resultScene = 100, gameExit = -9999, startGame = 0,
-				 inputNum_1 = 49,  inputNum_2 = 50, inputBtn_Esc = 27};
+enum CheckScene 
+{
+	mainScene = 0, gameScene = 50, resultScene = 100, gameExit = -9999, startGame = 0,
+	inputNum_1 = 49, inputNum_2 = 50, inputBtn_Esc = 27
+};
