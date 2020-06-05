@@ -1,6 +1,7 @@
 #pragma once
 
-int Update(int *checkPlay, int *saveScore);
+int Start(int *highestScore);
+int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore);
 void SetNewNum(int(*mapArr)[BASICARRSIZE], int check);
 void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOver, int *checkMaxNum, int *kbhitCnt, int *nowScore, int *highestScore);
 

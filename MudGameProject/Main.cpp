@@ -2,13 +2,16 @@
 #include "GameScreenHeader.h"
 
 bool ResultScreen(bool *isHighScore, bool *isPlay, int *saveScore, int *checkPlay);
+void SetValue(int *nowScore, int *saveScore, int *checkPlay, bool *isPlay, bool *isHighScore);
 
 int main()
 {
-	int saveScore = 0;
-	int checkPlay = 0;
-	bool isPlay = TRUE;
-	bool isHighScore = TRUE;
+	bool isPlay;
+	bool isHighScore;
+	int nowScore;
+	int highestScore;
+	int saveScore;
+	int checkPlay = startGame;
 
 	srand((unsigned)time(NULL));
 	system("mode con cols=44 lines=41");
@@ -41,28 +44,44 @@ int main()
 
 	// todo : 게임 화면
 	// +) Maybe : 장애물 생성 맵, 맵 크기 확장, 랭킹, 이동 O,X 시 효과음
-	
-	Update(&checkPlay, &saveScore);
-	while (checkPlay >= 0)
+
+	while (1)
 	{
-		if (checkPlay == 50)
+		if (checkPlay == gameExit)
+			break;
+	
+		if (checkPlay == mainScene)
 		{
+			// 메인화면 구현
+			system("cls");
+			puts("------------------메인화면 구현해야함-----------");
+			Sleep(500);
+			
+			checkPlay = gameScene;
+		}
+
+		if (checkPlay == gameScene)
+		{
+			SetValue(&nowScore, &saveScore, &checkPlay, &isPlay, &isHighScore);
+			Start(&highestScore);
+			Update(&checkPlay, &saveScore, &nowScore, &highestScore);
 			printf("2\n\n>> ReStart Game\n\nReady to New Game : ");
 			for (int i = 5; i > 0; i--)
 			{
 				Sleep(100);
 				printf("%d ", i);
 			}
-			checkPlay = 0;
-			Update(&checkPlay, &saveScore);
+			//checkPlay = 0;
+			//Update(&checkPlay, &saveScore, &nowScore, &highestScore);
+		}
+		else if (checkPlay == resultScene)
+		{
+			ResultScreen(&isHighScore, &isPlay, &saveScore, &checkPlay);
 		}
 		else
 		{
 			if (saveScore < 0)
 			{
-				printf("AnyKey\n\n");
-				
-				// ---------------------------------
 				isHighScore = TRUE;
 				ResultScreen(&isHighScore, &isPlay, &saveScore, &checkPlay);
 				if (!isPlay)
@@ -72,10 +91,6 @@ int main()
 			}
 			else
 			{
-				printf("AnyKey\n\n");
-
-				// ---------------------------------
-
 				isHighScore = FALSE;
 				ResultScreen(&isHighScore, &isPlay, &saveScore, &checkPlay);
 				if (!isPlay)
@@ -99,6 +114,7 @@ bool ResultScreen(bool *isHighScore, bool *isPlay, int *saveScore, int *checkPla
 {
 	FILE *openFp = NULL;
 	int inputNum = 0;
+	printf("AnyKey\n\n");
 	system("cls");
 
 	if (*isHighScore == TRUE)
@@ -110,7 +126,7 @@ bool ResultScreen(bool *isHighScore, bool *isPlay, int *saveScore, int *checkPla
 			puts("FileError!");
 			return FALSE;
 		}
-		fwrite(&saveScore, sizeof(int), 1, openFp);	// 바이너리 파일은 fwrite로 써야함!
+		fwrite(saveScore, sizeof(int), 1, openFp);	// 바이너리 파일은 fwrite로 써야함!
 		fclose(openFp);
 
 		printf("\n\n                 [ RESULT ]\n\n\n");
@@ -123,26 +139,35 @@ bool ResultScreen(bool *isHighScore, bool *isPlay, int *saveScore, int *checkPla
 		printf("\n>> You're Score\n\nscore : %d\n\n", *saveScore);
 	}
 
-	printf("\n\n\n\n>> Select Menu\n\n[ OPTION ]\n- Go to Main, Push '1'\n- Start Another Game, Push '2'\n- Exit Game, Push 'AnyKey'\n\nInput : ");
+	printf("\n\n\n\n>> Select Menu\n\n[ OPTION ]\n- Go to Main, Push '1'\n- Start New Game, Push '2'\n- Exit Game, Push 'AnyKey'\n\nInput : ");
 	
 	inputNum = _getch();
-	if (inputNum == 49)	// 메인화면 // 아직 미구현
+	if (inputNum == inputNum_1)	// 메인화면
 	{
 		puts("1");
-		//*checkPlay = 100;
-		//*isPlay = TRUE;
-		*isPlay = FALSE;
-	}
-	else if (inputNum == 50)	// 게임화면
-	{
+		*checkPlay = mainScene;
 		*isPlay = TRUE;
-		*checkPlay = 50;
+	}
+	else if (inputNum == inputNum_2)	// 게임화면
+	{
+		*checkPlay = gameScene;
+		*isPlay = TRUE;
 	}
 	else
 	{
 		puts("Exit");
+		*checkPlay = gameExit;
 		*isPlay = FALSE;
 	}
 
 	// 시작화면 or 게임화면 or 종료 조건 추가
+}
+
+void SetValue(int *nowScore, int *saveScore, int *checkPlay, bool *isPlay, bool *isHighScore)
+{
+	*nowScore = 0;
+	*saveScore = 0;
+	*checkPlay = 0;
+	*isPlay = TRUE;
+	*isHighScore = TRUE;
 }

@@ -1,12 +1,9 @@
 #include "BasicHeader.h"
 #include "GameScreenHeader.h"
 
-int Update(int *checkPlay, int *saveScore)
+int Start(int *highestScore)
 {
 	FILE *openFp = NULL;
-	int prevScore = 0;
-	int highestScore = 0;
-	int nowScore = 0;
 
 	if (_access("./HighestScore.dat", 00) == 0)	// 파일이 존재하는 경우
 		fopen_s(&openFp, "HighestScore.dat", "rb");
@@ -18,11 +15,12 @@ int Update(int *checkPlay, int *saveScore)
 		puts("FileError!");
 		return 0;
 	}
-	fread(&highestScore, sizeof(int), 1, openFp);	// 바이너리 파일은 fread로 읽어야 함!
+	fread(highestScore, sizeof(int), 1, openFp);	// 바이너리 파일은 fread로 읽어야 함!
 	fclose(openFp);
-	prevScore = highestScore;
-	// ------------------------------------------------------------
+}
 
+int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore)
+{
 	int inputNum = 0;
 	int checkMaxNum = 0;
 	int checkCanMove = 0;
@@ -30,36 +28,37 @@ int Update(int *checkPlay, int *saveScore)
 	int kbhitCnt = 0;
 
 	int mapArr[BASICARRSIZE][BASICARRSIZE] = { 0 };
+	int prevScore = *highestScore;
 
 	SetNewNum(mapArr, 0);
-	PrintArr(mapArr, "START", &kbhitCnt, &nowScore, &highestScore);
+	PrintArr(mapArr, "START", &kbhitCnt, nowScore, highestScore);
 	// mapArr[1][1] = BASICARR_MAXNUM;
 	while (1)
 	{
 		// CursorView(1);
-		PlayerInput(mapArr, &checkCanMove, &checkGameOver, &checkMaxNum, &kbhitCnt, &nowScore, &highestScore);
+		PlayerInput(mapArr, &checkCanMove, &checkGameOver, &checkMaxNum, &kbhitCnt, nowScore, highestScore);
 
-		if (checkCanMove == 27)	// Pause
+		if (checkCanMove == inputBtn_Esc)	// Pause
 		{
 			// continue : 1 / restart : 2 / exit : AnyKey
-			printf(">> Pause\n\n[ OPTION ]\n- If You Continue Game, push '1'\n- ReStart Game, push '2'\n- Exit Game, push 'AntKey'\n\nInput : ");
+			printf(">> Pause\n\n[ OPTION ]\n- If You Continue Game, push '1'\n- ReStart Game, push '2'\n- Game Over, push 'AntKey'\n\nInput : ");
 			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay))
 			{
-				if (*checkPlay == 49)	// continue
+				if (*checkPlay == inputNum_1)	// continue
 				{
-					PrintNewInput(mapArr, "1\n\n>> Continue Game\n\nReady to Continue : ", &kbhitCnt, &nowScore, &highestScore);
+					PrintNewInput(mapArr, "1\n\n>> Continue Game\n\nReady to Continue : ", &kbhitCnt, nowScore, highestScore);
 					continue;
 				}
-				else
-					return 0; 
+				else	
+					return 0;
 			}
 			else
 			{
-
-				if (prevScore < highestScore)
-					*saveScore = -highestScore;	// 최댓값 갱신을 알리기 위한 음수화
+				*checkPlay = resultScene;	// 게임화면 출력
+				if (prevScore < *highestScore)
+					*saveScore = -(*highestScore);	// 최댓값 갱신을 알리기 위한 음수화
 				else
-					*saveScore = nowScore;
+					*saveScore = *nowScore;
 				return 0;
 			}
 		}
@@ -67,25 +66,26 @@ int Update(int *checkPlay, int *saveScore)
 		if (checkCanMove == 0 && checkGameOver == BASICARRSIZE * BASICARRSIZE)	// GameOver
 		{
 			// continue : 1 / restart : 2 / exit : AnyKey
-			printf("\n>> GameOver\n\n[ OPTION ]\n- If You Revert Game, push '1'\n- ReStart Game, push '2'\n- Exit Game, push 'AntKey'\n\nInput : ");
+			printf("\n>> GameOver\n\n[ OPTION ]\n- If You Revert Game, push '1'\n- ReStart Game, push '2'\n- Game Over, push 'AntKey'\n\nInput : ");
 			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay))
 			{
-				if (*checkPlay == 49)
+				if (*checkPlay == inputNum_2)
 				{
-					PrintNewInput(mapArr, "1\n\n>> Revert Game\n\nReady to Revert : ", &kbhitCnt, &nowScore, &highestScore);
+					PrintNewInput(mapArr, "1\n\n>> Revert Game\n\nReady to Revert : ", &kbhitCnt, nowScore, highestScore);
 					continue;
 				}
 				else
-				{
-					if (prevScore < highestScore)
-						*saveScore = -highestScore;	// 최댓값 갱신을 알리기 위한 음수화
-					else
-						*saveScore = nowScore;
 					return 0;
-				}
 			}
 			else
+			{
+				*checkPlay = resultScene;	// 게임화면 출력
+				if (prevScore < *highestScore)
+					*saveScore = -(*highestScore);	// 최댓값 갱신을 알리기 위한 음수화
+				else
+					*saveScore = *nowScore;
 				return 0;
+			}
 		}
 
 		if (checkMaxNum == BASICARR_MAXNUM)	// MaxNum in it
@@ -95,16 +95,16 @@ int Update(int *checkPlay, int *saveScore)
 			printf("\n>> Congratulations!\n>> You Made a MaxNumber!\n\n[ OPTION ]\n- Start New Game, push '1' or '2'\n- Finish Game, push 'AnyKey'\n\nInput : ");
 			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay))
 			{
-				*checkPlay = 50;
+				*checkPlay = gameScene;
 				return 0;
 			}
 			else
 			{
-
-				if (prevScore < highestScore)
-					*saveScore = -highestScore;	// 최댓값 갱신을 알리기 위한 음수화
+				*checkPlay = resultScene;	// 게임화면 출력
+				if (prevScore < *highestScore)
+					*saveScore = -(*highestScore);	// 최댓값 갱신을 알리기 위한 음수화
 				else
-					*saveScore = nowScore;
+					*saveScore = *nowScore;
 				return 0;
 			}
 		}
@@ -112,11 +112,11 @@ int Update(int *checkPlay, int *saveScore)
 		if (checkCanMove != 0)	// Can Move
 		{
 			SetNewNum(mapArr, 1);
-			PrintArr(mapArr, "NewBlock", &kbhitCnt, &nowScore, &highestScore);
+			PrintArr(mapArr, "NewBlock", &kbhitCnt, nowScore, highestScore);
 		}
 		else // Can't Move
 		{
-			PrintNewInput(mapArr, "\n>> Can't Move\n\nReady to New Input : ", &kbhitCnt, &nowScore, &highestScore);
+			PrintNewInput(mapArr, "\n>> Can't Move\n\nReady to New Input : ", &kbhitCnt, nowScore, highestScore);
 			continue;
 		}
 	}
@@ -444,14 +444,14 @@ bool CheckGameContinue(int(*mapArr)[4], int *kbhitCnt, int *checkPlay)
 	int inputNum = 0;
 	inputNum = _getch();
 
-	if (inputNum == 49)
+	if (inputNum == inputNum_1)
 	{
-		*checkPlay = 49;
+		*checkPlay = inputNum_1;
 		return TRUE;
 	}
-	else if (inputNum == 50)
+	else if (inputNum == inputNum_2)
 	{
-		*checkPlay = 50;
+		*checkPlay = inputNum_2;
 		return TRUE;
 	}
 	else
@@ -501,6 +501,7 @@ void PrintNewInput(int(*mapArr)[4], char *string, int *kbhitCnt, int *nowScore, 
 	}
 	PrintArr(mapArr, "NewInput", kbhitCnt, nowScore, highestScore);
 }
+
 void CursorView(char show)//커서숨기기
 {
 	HANDLE hConsole;
