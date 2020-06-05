@@ -1,4 +1,4 @@
-#include "BasicHeader.h"
+ï»¿#include "BasicHeader.h"
 #include "GameScreenHeader.h"
 #include "ResultScreenHeader.h"
 
@@ -15,32 +15,32 @@ int main()
 	system("mode con cols=44 lines=41");
 	CursorView(0);
 
-	// todo : ¸ÞÀÎÈ­¸é ¹× Æ©Åä¸®¾ó
-	// - °ÔÀÓ ½ÃÀÛ
-	// - Æ©Åä¸®¾ó
-	// - °ÔÀÓ Á¾·á
-	// +) Maybe : BGM, ·©Å·
+	// todo : ë©”ì¸í™”ë©´ ë° íŠœí† ë¦¬ì–¼
+	// - ê²Œìž„ ì‹œìž‘
+	// - íŠœí† ë¦¬ì–¼
+	// - ê²Œìž„ ì¢…ë£Œ
+	// +) Maybe : BGM, ëž­í‚¹
 
-	// todo : Æ©Åä¸®¾ó
-	// - text ÇüÅÂ·Î ÇÃ·¹ÀÌ ¹æ¹ý Ãâ·Â
-	// - ÇÃ·¹ÀÌ ¹æ¹ý
+	// todo : íŠœí† ë¦¬ì–¼
+	// - text í˜•íƒœë¡œ í”Œë ˆì´ ë°©ë²• ì¶œë ¥
+	// - í”Œë ˆì´ ë°©ë²•
 	/*
-	--> ¹æÇâÅ°¸¦ ÀÔ·ÂÇØ¼­ ¼ýÀÚºí·ÏÀ» ÀÌµ¿½ÃÅ³ ¼ö ÀÖÀ½(»óÇÏÁÂ¿ì)
-	¡à¡è¡à
-	¡ç2¡æ
-	¡à¡é¡à
+	--> ë°©í–¥í‚¤ë¥¼ ìž…ë ¥í•´ì„œ ìˆ«ìžë¸”ë¡ì„ ì´ë™ì‹œí‚¬ ìˆ˜ ìžˆìŒ(ìƒí•˜ì¢Œìš°)
+	â–¡â†‘â–¡
+	â†2â†’
+	â–¡â†“â–¡
 
-	--> °°Àº ¼ýÀÚºí·ÏÀ» ¸¸³¯ °æ¿ì, ¼ýÀÚ ºí·ÏÀº ÇÕÃÄÁü
-	¡à2¡à2 => ¡à¡à2+2 => ¡à¡à¡à4
+	--> ê°™ì€ ìˆ«ìžë¸”ë¡ì„ ë§Œë‚  ê²½ìš°, ìˆ«ìž ë¸”ë¡ì€ í•©ì³ì§
+	â–¡2â–¡2 => â–¡â–¡2+2 => â–¡â–¡â–¡4
 
-	--> ´õ ÀÌ»ó ¿òÁ÷ÀÏ ¼ö ¾ø°Å³ª,((?)ÃÖ°í ¼ýÀÚ¸¦ ¸¸µé °æ¿ì) °ÔÀÓ Á¾·á
+	--> ë” ì´ìƒ ì›€ì§ì¼ ìˆ˜ ì—†ê±°ë‚˜,((?)ìµœê³  ìˆ«ìžë¥¼ ë§Œë“¤ ê²½ìš°) ê²Œìž„ ì¢…ë£Œ
 
 	*/
-	// - ÀÔ·ÂÅ°, ÀÏ½ÃÁ¤ÁöÅ°
-	// - ¸ÞÀÎÈ­¸é(µÚ·Î°¡±â)
+	// - ìž…ë ¥í‚¤, ì¼ì‹œì •ì§€í‚¤
+	// - ë©”ì¸í™”ë©´(ë’¤ë¡œê°€ê¸°)
 
-	// todo : °ÔÀÓ È­¸é
-	// +) Maybe : Àå¾Ö¹° »ý¼º ¸Ê, ¸Ê Å©±â È®Àå, ·©Å·, ÀÌµ¿ O,X ½Ã È¿°úÀ½
+	// todo : ê²Œìž„ í™”ë©´
+	// +) Maybe : ìž¥ì• ë¬¼ ìƒì„± ë§µ, ë§µ í¬ê¸° í™•ìž¥, ëž­í‚¹, ì´ë™ O,X ì‹œ íš¨ê³¼ìŒ
 
 	while (1)
 	{
@@ -49,12 +49,36 @@ int main()
 	
 		else if (checkPlay == mainScene)
 		{
-			// ¸ÞÀÎÈ­¸é ±¸Çö
 			system("cls");
-			puts("------------------¸ÞÀÎÈ­¸é ±¸ÇöÇØ¾ßÇÔ-----------");
-			Sleep(500);
+			// ë©”ì¸í™”ë©´ êµ¬í˜„
+			int inputNum = 0;
+			printf("\n\n\n\n\n\n\n\n\n");
+			printf("         ___     ___     ___     ___  \n");
+			printf("       || 2 |  || 0 |  || 4 |  || 8 | \n");
+			printf("       ||___|  ||___|  ||___|  ||___| \n");
+			printf("       |/___|  |/___|  |/___|  |/___| \n");
+			printf("\n\n\n\n\n\n\n");
+
+			printf("             [ 1. GameStart ]\n\n\n");
+			printf("             [ 2. Tutorial  ]\n\n\n\n\n\n");
+
+			printf("       Press Another Button is EXIT..\n\n");
 			
-			checkPlay = gameScene;	// °ÔÀÓ½ÃÀÛ ¼±ÅÃ½Ã
+			inputNum = _getch();
+			if (inputNum == inputNum_1)
+				checkPlay = gameScene;	// ê²Œìž„ì‹œìž‘ ì„ íƒì‹œ
+			else if (inputNum == inputNum_2)
+			{
+				system("cls");
+				// checkPlay = tutorialScene;
+				printf("\n\n\n\n\n");
+				printf("    [ Input AnyKey, You Can Go To Main ]");
+				inputNum = _getch();
+				if (inputNum != NULL)
+					checkPlay = mainScene;
+			}
+			else
+				checkPlay = gameExit;
 		}
 
 		else if (checkPlay == gameScene)
@@ -97,10 +121,10 @@ int main()
 		}
 	}	// while()
 
-	puts("\n\n>> Game Exit\n");
+	printf("\n\n\n              [ Game Exit ]\n\n");
 	_getch();
 	return 0;
 
-	// todo : °ÔÀÓ Á¾·á È­¸é
-	// +) Maybe : ·©Å·
+	// todo : ê²Œìž„ ì¢…ë£Œ í™”ë©´
+	// +) Maybe : ëž­í‚¹
 }
