@@ -103,9 +103,8 @@ int main()
 	puts("\n\n>> Game Exit\n");
 	_getch();
 	return 0;
+
 	// todo : 게임 종료 화면
-	// - 시작화면으로 돌아갈 수 있어야 함
-	// - 게임을 다시 시작할 수 있어야 함
 	// +) Maybe : 랭킹
 }
 
