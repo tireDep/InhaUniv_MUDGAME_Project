@@ -12,6 +12,8 @@ void SetValue(int *nowScore, int *saveScore, int *checkPlay, bool *isPlay, bool 
 
 int Start(int *highestScore)
 {
+	*highestScore = 0;	// 초기화 값 추가!
+
 	FILE *openFp = NULL;
 
 	if (_access("./HighestScore.dat", 00) == 0)	// 파일이 존재하는 경우
@@ -58,7 +60,7 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore)
 					PrintNewInput(mapArr, "1\n\n>> Continue Game\n\nReady to Continue : ", &kbhitCnt, nowScore, highestScore);
 					continue;
 				}
-				else	
+				else
 					return 0;
 			}
 			else
@@ -212,7 +214,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 					if (IsCanMove(mapArr, j, i, checkCanMove, checkGameOver, checkMaxNum, plusPos, zeroPos))
 						return;
 				}
-				if (mapArr[BASICARRSIZE-1][i] != 0)	// 맨 마지막 값 저장
+				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 맨 마지막 값 저장
 					(*checkGameOver)++;
 
 				if (mapArr[BASICARRSIZE - 1][i] == BASICARR_MAXNUM)	// 최댓값 확인
@@ -242,7 +244,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 					if (j == BASICARRSIZE)
 						continue;
 
-					if (IsCanMove(mapArr,j,i,checkCanMove,checkGameOver, checkMaxNum, minusPos,zeroPos))
+					if (IsCanMove(mapArr, j, i, checkCanMove, checkGameOver, checkMaxNum, minusPos, zeroPos))
 						return;
 				}
 				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 맨 마지막 값 저장
@@ -339,7 +341,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 }
 
 // ※ : 리팩토링
-bool IsCanMove(int (*mapArr)[BASICARRSIZE], int posY, int posX, int *checkCanMove, int *checkGameOver, int *checkMaxNum, int moveY, int moveX)
+bool IsCanMove(int(*mapArr)[BASICARRSIZE], int posY, int posX, int *checkCanMove, int *checkGameOver, int *checkMaxNum, int moveY, int moveX)
 {
 	if (mapArr[posY][posX] == 0 && mapArr[posY + moveY][posX + moveX] != 0)
 		(*checkCanMove)++;
@@ -355,7 +357,7 @@ bool IsCanMove(int (*mapArr)[BASICARRSIZE], int posY, int posX, int *checkCanMov
 
 	if (mapArr[posY][posX] == BASICARR_MAXNUM)
 		(*checkMaxNum) = BASICARR_MAXNUM;
-	
+
 	if (checkCanMove == 0 && (*checkGameOver) == 16)
 		return TRUE;
 	if (checkCanMove == 0)
@@ -495,7 +497,7 @@ void PrintArr(int(*mapArr)[BASICARRSIZE], char *string, int *kbhitCnt, int *nowS
 			{
 				checkNum++;
 			}
-			if(j == 0)
+			if (j == 0)
 				printf("   ");
 			else
 				printf("  ");

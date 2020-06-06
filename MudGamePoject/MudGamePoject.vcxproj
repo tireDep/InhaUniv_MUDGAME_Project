@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{696155BC-0D14-42E3-AD5B-119B80CDE992}</ProjectGuid>
+    <ProjectGuid>{4050E77D-B632-4EF2-BAC1-056CA862B2A5}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>MudGameProject</RootNamespace>
+    <RootNamespace>MudGamePoject</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -149,11 +149,6 @@
     <ClCompile Include="GameScreen.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="ResultScreen.cpp" />
-    <ClCompile Include="Test.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicHeader.h" />

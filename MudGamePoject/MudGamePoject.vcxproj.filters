@@ -18,13 +18,10 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Test.cpp">
+    <ClCompile Include="ResultScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="GameScreen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="ResultScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

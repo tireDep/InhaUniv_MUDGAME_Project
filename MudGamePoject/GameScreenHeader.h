@@ -1,5 +1,7 @@
 #pragma once
 
+#include "BasicHeader.h"	// BASICARRSIZE
+
 void SetValue(int *nowScore, int *saveScore, int *checkPlay, bool *isPlay, bool *isHighScore);
 
 int Start(int *highestScore);
