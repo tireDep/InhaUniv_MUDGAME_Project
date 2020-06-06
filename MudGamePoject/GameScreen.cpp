@@ -1,9 +1,10 @@
 #include "BasicHeader.h"
 #include "GameScreenHeader.h"
 
-void SetValue(int *nowScore, int *saveScore, int *checkPlay, bool *isPlay, bool *isHighScore)
+void SetValue(int *nowScore, int *highestScore, int *saveScore, int *checkPlay, bool *isPlay, bool *isHighScore)
 {
 	*nowScore = 0;
+	*highestScore = 0;
 	*saveScore = 0;
 	*checkPlay = 0;
 	*isPlay = TRUE;
@@ -12,8 +13,6 @@ void SetValue(int *nowScore, int *saveScore, int *checkPlay, bool *isPlay, bool 
 
 int Start(int *highestScore)
 {
-	*highestScore = 0;	// 초기화 값 추가!
-
 	FILE *openFp = NULL;
 
 	if (_access("./HighestScore.dat", 00) == 0)	// 파일이 존재하는 경우
@@ -24,7 +23,8 @@ int Start(int *highestScore)
 	if (openFp == NULL)
 	{
 		puts("FileError!");
-		return 0;
+		exit(1);
+		//return 0;
 	}
 
 	fread(highestScore, sizeof(int), 1, openFp);	// 바이너리 파일은 fread로 읽어야 함!
@@ -57,7 +57,7 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore)
 			{
 				if (*checkPlay == inputNum_1)	// Continue
 				{
-					PrintNewInput(mapArr, "1\n\n>> Continue Game\n\nReady to Continue : ", &kbhitCnt, nowScore, highestScore);
+					PrintNewInput(mapArr, "Continue\n\n>> Continue Game\n\nReady to Continue : ", &kbhitCnt, nowScore, highestScore);
 					continue;
 				}
 				else
@@ -83,7 +83,7 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore)
 			{
 				if (*checkPlay == inputNum_1)
 				{
-					PrintNewInput(mapArr, "1\n\n>> Revert Game\n\nReady to Revert : ", &kbhitCnt, nowScore, highestScore);
+					PrintNewInput(mapArr, "Revert\n\n>> Revert Game\n\nReady to Revert : ", &kbhitCnt, nowScore, highestScore);
 					continue;
 				}
 				else
