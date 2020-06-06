@@ -148,12 +148,12 @@
   <ItemGroup>
     <ClCompile Include="GameScreen.cpp" />
     <ClCompile Include="Main.cpp" />
-    <ClCompile Include="ResultScreen.cpp" />
+    <ClCompile Include="MainResultScreen.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicHeader.h" />
     <ClInclude Include="GameScreenHeader.h" />
-    <ClInclude Include="ResultScreenHeader.h" />
+    <ClInclude Include="MainResultHeader.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
