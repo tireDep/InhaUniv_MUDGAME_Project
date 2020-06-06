@@ -18,10 +18,10 @@
     <ClCompile Include="Main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ResultScreen.cpp">
+    <ClCompile Include="GameScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="GameScreen.cpp">
+    <ClCompile Include="MainResultScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -32,7 +32,7 @@
     <ClInclude Include="GameScreenHeader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ResultScreenHeader.h">
+    <ClInclude Include="MainResultHeader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

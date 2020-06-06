@@ -2,7 +2,7 @@
 
 #include "BasicHeader.h"	// BASICARRSIZE
 
-void SetValue(int *nowScore, int *saveScore, int *checkPlay, bool *isPlay, bool *isHighScore);
+void SetValue(int *nowScore, int *highestScore, int *saveScore, int *checkPlay, bool *isPlay, bool *isHighScore);
 
 int Start(int *highestScore);
 int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore);
