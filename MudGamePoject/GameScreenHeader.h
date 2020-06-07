@@ -2,10 +2,13 @@
 
 #include "BasicHeader.h"	// BASICARRSIZE
 
-void SetValue(int *nowScore, int *highestScore, int *saveScore, int *checkPlay, bool *isPlay, bool *isHighScore);
-
+void SetValue(int *nowScore, int *highestScore, int *saveScore, int *checkPlay, int *inputMode, bool *isPlay, bool *isHighScore, bool *isBlock);
 int Start(int *highestScore);
-int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore);
+
+void SetBlock(int(*mapArr)[BASICARRSIZE]);
+void CheckBlockMode(int *inputMode, bool *isBlock);
+
+int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, bool isBlock);
 
 void SetNewNum(int(*mapArr)[BASICARRSIZE], int check);
 void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOver, int *checkMaxNum, int *kbhitCnt, int *nowScore, int *highestScore);

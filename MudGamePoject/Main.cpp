@@ -2,7 +2,6 @@
 #include "GameScreenHeader.h"
 #include "MainResultHeader.h"
 
-
 #pragma comment(lib, "winmm.lib")
 #include "Mmsystem.h"
 #include "Digitalv.h"
@@ -39,6 +38,9 @@ int main()
 
 	bool isPlay = TRUE;
 	bool isHighScore = TRUE;
+	bool isBlock = TRUE;
+
+	int inputMode = 0;
 	int nowScore = 0;
 	int highestScore = 0;
 	int saveScore = 0;
@@ -79,6 +81,10 @@ int main()
 
 		if (checkPlay == gameScene)
 		{
+			SetValue(&nowScore, &highestScore, &saveScore, &checkPlay, &inputMode, &isPlay, &isHighScore, &isBlock);
+			Start(&highestScore);
+			CheckBlockMode(&inputMode, &isBlock);
+
 			mciSendCommandW(dwID, MCI_CLOSE, 0, NULL);
 			mciOpen.lpstrElementName = ".\\sound\\bgm3.mp3"; // 파일 경로 입력
 			mciOpen.lpstrDeviceType = "mpegvideo";
@@ -90,10 +96,7 @@ int main()
 			mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, // play & repeat
 				(DWORD)(LPVOID)&m_mciPlayParms);
 
-
-			SetValue(&nowScore, &highestScore, &saveScore, &checkPlay, &isPlay, &isHighScore);
-			Start(&highestScore);
-			Update(&checkPlay, &saveScore, &nowScore, &highestScore);
+			Update(&checkPlay, &saveScore, &nowScore, &highestScore, isBlock);
 
 			if (checkPlay == gameScene)
 			{

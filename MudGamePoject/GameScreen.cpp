@@ -1,14 +1,17 @@
 #include "BasicHeader.h"
 #include "GameScreenHeader.h"
 
-void SetValue(int *nowScore, int *highestScore, int *saveScore, int *checkPlay, bool *isPlay, bool *isHighScore)
+void SetValue(int *nowScore, int *highestScore, int *saveScore, int *checkPlay, int *inputMode, bool *isPlay, bool *isHighScore, bool *isBlock)
 {
 	*nowScore = 0;
 	*highestScore = 0;
 	*saveScore = 0;
 	*checkPlay = 0;
+	*inputMode = 0;
+
 	*isPlay = TRUE;
 	*isHighScore = TRUE;
+	*isBlock = FALSE;
 }
 
 int Start(int *highestScore)
@@ -31,7 +34,23 @@ int Start(int *highestScore)
 	fclose(openFp);
 }
 
-int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore)
+void CheckBlockMode(int *inputMode, bool *isBlock)
+{
+	system("cls");
+	printf("\n\n\n\n\n\n\n\n\n\n\n\n");
+	printf("    [ Do you want to play Block Mode?? ]\n\n\n\n");
+	printf("    >> Normal Mode : Push '1' or 'AnyKey'\n\n    >> Block Mode : Push '2");
+
+	*inputMode = _getch();
+	if (*inputMode == 49)
+		*isBlock = FALSE;
+	else if (*inputMode == 50)
+		*isBlock = TRUE;
+	else
+		*isBlock = FALSE;
+}
+
+int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, bool isBlock)
 {
 	int inputNum = 0;
 	int checkMaxNum = 0;
@@ -43,6 +62,10 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore)
 	int prevScore = *highestScore;
 
 	SetNewNum(mapArr, 0);
+	if (isBlock)
+	{
+		SetBlock(mapArr);	// 랜덤 장애물 설정
+	}
 	PrintArr(mapArr, "START", &kbhitCnt, nowScore, highestScore);
 	// mapArr[1][1] = BASICARR_MAXNUM;
 	while (1)
@@ -171,6 +194,33 @@ void SetNewNum(int(*mapArr)[BASICARRSIZE], int check)
 		}
 		else
 			mapArr[posY][posX] = randVal;
+
+		if (check == 2)
+			break;
+	}
+}
+
+void SetBlock(int(*mapArr)[BASICARRSIZE])
+{
+	int posX = 0, posY = 0, blockNum = 1, check = 0;
+
+	while (1)
+	{
+		check++;
+		posX = rand() % BASICARRSIZE;
+		posY = rand() % BASICARRSIZE;
+
+		if (mapArr[posY][posX] != 0 && check >= 1)
+		{
+			check--;
+			continue;
+		}
+		else if (mapArr[posY][posX] == 0 && check == 2)
+		{
+			mapArr[posY][posX] = blockNum;
+		}
+		else
+			mapArr[posY][posX] = blockNum;
 
 		if (check == 2)
 			break;
@@ -368,6 +418,9 @@ bool IsCanMove(int(*mapArr)[BASICARRSIZE], int posY, int posX, int *checkCanMove
 
 void MoveToInput(int(*mapArr)[BASICARRSIZE], int *posY, int *posX, int moveY, int moveX, int setStart, int setNext, int moveTo, int *nowScore, int *highestScore)
 {
+	if (mapArr[*posY][*posX] == 1)
+		return;
+
 	if (mapArr[*posY][*posX] != 0)	// 값이 있는 경우
 	{
 		if (mapArr[*posY + moveY][*posX + moveX] == 0)	// 앞 칸이 비었을 경우
@@ -391,10 +444,10 @@ void MoveToInput(int(*mapArr)[BASICARRSIZE], int *posY, int *posX, int moveY, in
 				*highestScore = *nowScore;
 			}
 
-			if (moveTo == upDownPos)
-				*posY += setNext;
-			else
-				posX += setNext;
+			//if (moveTo == upDownPos)
+			//	*posY += setNext;
+			//else
+			//	*posX += setNext;
 		}
 	}
 }
@@ -487,12 +540,6 @@ void PrintArr(int(*mapArr)[BASICARRSIZE], char *string, int *kbhitCnt, int *nowS
 		for (int j = 0; j < BASICARRSIZE; j++)
 		{
 			checkNum = 0;
-			//if (mapArr[i][j] == 1)
-			//{
-			//	printf(" |  Block  ");
-			//}
-			//else
-			//{
 			while (pow(2, checkNum) != mapArr[i][j] && mapArr[i][j] != 0)
 			{
 				checkNum++;
@@ -504,8 +551,13 @@ void PrintArr(int(*mapArr)[BASICARRSIZE], char *string, int *kbhitCnt, int *nowS
 			TextColor(WHITE, BLACK);
 			printf("|");
 			TextColor(WHITE - checkNum, BLACK + checkNum);
-			printf("%6d", mapArr[i][j]);
-			//}
+			if(mapArr[i][j]!=1)
+				printf("%6d", mapArr[i][j]);
+			else
+			{
+				TextColor(BLACK, WHITE);
+				printf("     X");
+			}
 		}
 		printf("  ");
 		TextColor(WHITE, BLACK);
