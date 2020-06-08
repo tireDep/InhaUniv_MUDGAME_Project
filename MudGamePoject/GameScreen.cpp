@@ -1,6 +1,15 @@
 #include "BasicHeader.h"
 #include "GameScreenHeader.h"
 
+extern MCI_OPEN_PARMS m_mciOpenParms;
+extern MCI_PLAY_PARMS m_mciPlayParms;
+extern DWORD m_dwDeviceID;
+extern MCI_OPEN_PARMS mciOpen;
+extern MCI_PLAY_PARMS mciPlay;
+
+extern int dwID;
+// 일시정지 등 특정 상황에서 bgm 제어
+
 void SetValue(int *nowScore, int *highestScore, int *saveScore, int *checkPlay, int *inputMode, bool *isPlay, bool *isHighScore, bool *isBlock)
 {
 	*nowScore = 0;
@@ -40,23 +49,47 @@ int Start(int *highestScore, bool isBlock)
 	fclose(openFp);
 }
 
-void CheckBlockMode(int *inputMode, bool *isBlock)
+void CheckBlockMode(int *inputMode, bool *isBlock, bool *isSoundEffect, int *checkPlay, int *blockCnt)
 {
+	if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
+
 	system("cls");
 	printf("\n\n\n\n\n\n\n\n\n\n\n\n");
-	printf("    [ Do you want to play Block Mode?? ]\n\n\n\n");
-	printf("    >> Normal Mode : Push '1' or 'AnyKey'\n\n    >> Block Mode : Push '2");
+	printf("          [ Choose Your Game Mode ]\n\n\n\n");
+	printf("    >> Normal Mode : Push '1'\n\n      (Normal 2048)\n\n\n\n");
+	printf("    >> Block Mode : Push '2' or '3'\n\n      (Random Position Block)\n\n");
+	printf("      - 2 : 1 Block\n\n      - 3 : 2 Block\n\n\n\n");
+	printf("    >> Go to Main : Push 'AnyKey'\n\n");
 
 	*inputMode = _getch();
-	if (*inputMode == 49)
+	if (*inputMode == inputNum_1)
+	{
+		if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
+		*checkPlay = gameScene;
 		*isBlock = FALSE;
-	else if (*inputMode == 50)
+	}
+	else if (*inputMode == inputNum_2)
+	{
+		if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
+		*checkPlay = gameScene;
+		*blockCnt = 1;
 		*isBlock = TRUE;
+	}
+	else if (*inputMode == inputNum_3)
+	{
+		if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
+		*checkPlay = gameScene;
+		*blockCnt = 2;
+		*isBlock = TRUE;
+	}
 	else
-		*isBlock = FALSE;
+	{
+		if (*isSoundEffect) sndPlaySoundA(".\\sound\\highDown.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
+		*checkPlay = mainScene;
+	}
 }
 
-int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, bool isBlock)
+int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int blockCnt, bool isBlock, bool *isBgm, bool *isSoundEffect)
 {
 	int inputNum = 0;
 	int checkMaxNum = 0;
@@ -70,7 +103,7 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, boo
 	SetNewNum(mapArr, 0);
 	if (isBlock)
 	{
-		SetBlock(mapArr);	// 랜덤 장애물 설정
+		SetBlock(mapArr, blockCnt);	// 랜덤 장애물 설정
 	}
 	PrintArr(mapArr, "START", &kbhitCnt, nowScore, highestScore);
 	// mapArr[1][1] = BASICARR_MAXNUM;
@@ -80,21 +113,33 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, boo
 
 		if (checkCanMove == inputBtn_Esc)	// Pause
 		{
-			// Continue : 1 / Restart : 2 / GameOver : AnyKey
-			printf(">> Pause\n\n[ OPTION ]\n- If You Continue Game, push '1'\n- ReStart Game, push '2'\n- Game Over, push 'AntKey'\n\nInput : ");
-			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay))
+			mciSendCommandW(dwID, MCI_PAUSE, MCI_NOTIFY, (DWORD)(LPVOID)&m_mciPlayParms); // bgm pause
+			if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
+
+			printf(">> Pause\n\n[ OPTION ]\n- If You Continue Game, push '1'\n- ReStart Game, push '2'\n- Game Over, push 'AntKey'\n\n");
+			printf("[ SOUND ]\n- BGM On/Off, push '3',\n- SoundeEffect On/Off, push '4'\n\nInput : ");
+			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay, isBgm, isSoundEffect))
 			{
+				if (*isBgm) mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
+				if (*isSoundEffect) sndPlaySoundA(".\\sound\\highDown.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
+
 				if (*checkPlay == inputNum_1)	// Continue
 				{
 					PrintNewInput(mapArr, "Continue\n\n>> Continue Game\n\nReady to Continue : ", &kbhitCnt, nowScore, highestScore);
 					continue;
 				}
 				else
+				{
+					*checkPlay = gameScene;
 					return 0;
+				}
 			}
 			else
 			{
 				// ※ : 리팩토링
+				if (*isBgm) mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
+				if (*isSoundEffect) sndPlaySoundA(".\\sound\\highDown.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
+
 				*checkPlay = resultScene;
 				if (prevScore < *highestScore)
 					*saveScore = -(*highestScore);	// 최댓값 갱신을 알리기 위한 음수화
@@ -107,20 +152,33 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, boo
 		if (checkCanMove == 0 && checkGameOver == BASICARRSIZE * BASICARRSIZE)	// GameOver
 		{
 			// Continue : 1 / Revert : 2 / GameOver : AnyKey
-			printf("\n>> GameOver\n\n[ OPTION ]\n- If You Revert Game, push '1'\n- Revert Game, push '2'\n- Game Over, push 'AntKey'\n\nInput : ");
-			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay))
+			mciSendCommandW(dwID, MCI_PAUSE, MCI_NOTIFY, (DWORD)(LPVOID)&m_mciPlayParms); // bgm pause
+			if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
+
+			printf("\n>> GameOver\n\n[ OPTION ]\n- If You Revert Game, push '1'\n- ReStart Game, push '2'\n- Game Over, push 'AntKey'\n\n");
+			printf("[ SOUND ]\n- BGM On/Off, push '3',\n- SoundeEffect On/Off, push '4'\n\nInput : ");
+			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay, isBgm, isSoundEffect))
 			{
+				if (*isBgm) mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
+				if (*isSoundEffect) sndPlaySoundA(".\\sound\\highDown.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
+
 				if (*checkPlay == inputNum_1)
 				{
 					PrintNewInput(mapArr, "Revert\n\n>> Revert Game\n\nReady to Revert : ", &kbhitCnt, nowScore, highestScore);
 					continue;
 				}
 				else
+				{
+					*checkPlay = gameScene;
 					return 0;
+				}
 			}
 			else
 			{
 				// ※ : 리팩토링
+				if (*isBgm) mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
+				if (*isSoundEffect) sndPlaySoundA(".\\sound\\highDown.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
+
 				*checkPlay = resultScene;
 				if (prevScore < *highestScore)
 					*saveScore = -(*highestScore);	// 최댓값 갱신을 알리기 위한 음수화
@@ -133,11 +191,21 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, boo
 		if (checkMaxNum == BASICARR_MAXNUM)	// MaxNum in it
 		{
 			// Main : 1 / Restart : 2 / Exit : AnyKey
-			printf("\n>> Congratulations!\n>> You Made a MaxNumber!\n\n[ OPTION ]\n- Go to Main, push '1'\n- Start New Game, push '2'\n- Finish Game, push 'AnyKey'\n\nInput : ");
-			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay))
+			mciSendCommandW(dwID, MCI_PAUSE, MCI_NOTIFY, (DWORD)(LPVOID)&m_mciPlayParms); // bgm pause
+			if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
+
+			printf("\n>> Congratulations!\n>> You Made a MaxNumber!\n\n[ OPTION ]\n- Go to Main, push '1'\n- Start New Game, push '2'\n- Finish Game, push 'AnyKey'\n\n");
+			printf("[ SOUND ]\n- BGM On/Off, push '3',\n- SoundeEffect On/Off, push '4'\n\nInput : ");
+
+			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay, isBgm, isSoundEffect))
 			{
+				if (*isBgm) mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
+				if (*isSoundEffect) sndPlaySoundA(".\\sound\\highDown.wav", SND_ASYNC | SND_NODEFAULT);
+
 				if (*checkPlay == inputNum_1)
+				{
 					*checkPlay = mainScene;
+				}
 				else
 				{
 					// ※ : 리팩토링
@@ -151,6 +219,9 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, boo
 			else
 			{
 				// ※ : 리팩토링
+				if (*isBgm) mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
+				if (*isSoundEffect) sndPlaySoundA(".\\sound\\highDown.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
+
 				*checkPlay = resultScene;
 				if (prevScore < *highestScore)
 					*saveScore = -(*highestScore);	// 최댓값 갱신을 알리기 위한 음수화
@@ -162,11 +233,13 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, boo
 
 		if (checkCanMove != 0)	// Can Move
 		{
+			if(*isSoundEffect) sndPlaySoundA(".\\sound\\tone.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
 			SetNewNum(mapArr, 1);
 			PrintArr(mapArr, "NewBlock", &kbhitCnt, nowScore, highestScore);
 		}
 		else // Can't Move
 		{
+			if (*isSoundEffect) sndPlaySoundA(".\\sound\\twoTone.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
 			PrintNewInput(mapArr, "\n>> Can't Move\n\nReady to New Input : ", &kbhitCnt, nowScore, highestScore);
 			continue;
 		}
@@ -206,7 +279,7 @@ void SetNewNum(int(*mapArr)[BASICARRSIZE], int check)
 	}
 }
 
-void SetBlock(int(*mapArr)[BASICARRSIZE])
+void SetBlock(int(*mapArr)[BASICARRSIZE], int blockCnt)
 {
 	int posX = 0, posY = 0, blockNum = 1, check = 0;
 
@@ -228,7 +301,7 @@ void SetBlock(int(*mapArr)[BASICARRSIZE])
 		else
 			mapArr[posY][posX] = blockNum;
 
-		if (check == 2)
+		if (check == blockCnt)
 			break;
 	}
 }
@@ -471,24 +544,62 @@ void SetAbsVal_RightLeft(int(*mapArr)[BASICARRSIZE], int posY)
 		mapArr[posY][i] = abs(mapArr[posY][i]);
 }
 
-bool CheckGameContinue(int(*mapArr)[4], int *kbhitCnt, int *checkPlay)
+bool CheckGameContinue(int(*mapArr)[4], int *kbhitCnt, int *checkPlay, bool *isBgm, bool *isSoundEffect)
 {
 	// Continue : 1 / Restart & Revert : 2 / GameOver : AnyKey
 	int inputNum = 0;
 	inputNum = _getch();
-
-	if (inputNum == inputNum_1)
+	if (inputNum == 224)	//  입력금지
 	{
-		*checkPlay = inputNum_1;
-		return TRUE;
+		while (inputNum == 224 || inputNum == 72 || inputNum == 75 || inputNum == 77 || inputNum == 80)
+		{
+			inputNum = _getch();
+		}
 	}
-	else if (inputNum == inputNum_2)
+	while (1)
 	{
-		*checkPlay = inputNum_2;
-		return TRUE;
+		if (inputNum == inputNum_1)
+		{
+			*checkPlay = inputNum_1;
+			return TRUE;
+		}
+		else if (inputNum == inputNum_2)
+		{
+			*checkPlay = inputNum_2;
+			return TRUE;
+		}
+		else if (inputNum == inputNum_3)
+		{
+			if (*isBgm)
+			{
+				*isBgm = FALSE;
+				printf("[ BGM OFF ] ");
+				mciSendCommandW(dwID, MCI_PAUSE, MCI_NOTIFY, (DWORD)(LPVOID)&m_mciPlayParms);
+			}
+			else
+			{
+				*isBgm = TRUE;
+				printf("[ BGM ON ] ");
+				mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
+			}
+		}
+		else if (inputNum == inputNum_4)
+		{
+			if (*isSoundEffect)
+			{
+				*isSoundEffect = FALSE;
+				printf("[ Sound Effect OFF ] ");
+			}
+			else
+			{
+				*isSoundEffect = TRUE;
+				printf("[ Sound Effect ON ] ");
+			}
+		}
+		else
+			return FALSE;
+		inputNum = _getch();
 	}
-	else
-		return FALSE;
 }
 
 /*
