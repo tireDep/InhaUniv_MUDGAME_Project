@@ -118,7 +118,7 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 
 			printf(">> Pause\n\n[ OPTION ]\n- If You Continue Game, push '1'\n- ReStart Game, push '2'\n\n");
 			printf("[ SOUND ]\n- BGM On/Off, push '3',\n- SoundeEffect On/Off, push '4'\n\n");
-			printf("[ EXIT ]\n- Game Over, push 'AntKey'\n\nInput : ");
+			printf("[ GAME OVER ]\n- Game Over, push 'AntKey'\n\nInput : ");
 			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay, isBgm, isSoundEffect))
 			{
 				if (*isBgm) mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
@@ -158,7 +158,7 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 
 			printf("\n>> GameOver\n\n[ OPTION ]\n- If You Revert Game, push '1'\n- ReStart Game, push '2'\n\n");
 			printf("[ SOUND ]\n- BGM On/Off, push '3',\n- SoundeEffect On/Off, push '4'\n\n");
-			printf("[ EXIT ]\n- Game Over, push 'AntKey'\n\nInput : ");
+			printf("[ GAME OVER ]\n- Game Over, push 'AntKey'\n\nInput : ");
 			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay, isBgm, isSoundEffect))
 			{
 				if (*isBgm) mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
@@ -198,7 +198,7 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 
 			printf("\n>> Congratulations!\n>> You Made a MaxNumber!\n\n[ OPTION ]\n- Go to Main, push '1'\n- Start New Game, push '2'\n\n");
 			printf("[ SOUND ]\n- BGM On/Off, push '3',\n- SoundeEffect On/Off, push '4'\n\n");
-			printf("[ EXIT ]\n- Game Over, push 'AntKey'\n\nInput : ");
+			printf("[ GAME OVER ]\n- Game Over, push 'AntKey'\n\nInput : ");
 
 			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay, isBgm, isSoundEffect))
 			{
@@ -475,9 +475,9 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 // ※ : 리팩토링
 bool IsCanMove(int(*mapArr)[BASICARRSIZE], int posY, int posX, int *checkCanMove, int *checkGameOver, int *checkMaxNum, int moveY, int moveX)
 {
-	if (mapArr[posY][posX] == 0 && mapArr[posY + moveY][posX + moveX] != 0)
+	if (mapArr[posY][posX] == 0 && mapArr[posY + moveY][posX + moveX] > 1)
 		(*checkCanMove)++;
-	if (mapArr[posY][posX] == mapArr[posY + moveY][posX + moveX] && mapArr[posY][posX] != 0)
+	if (mapArr[posY][posX] == mapArr[posY + moveY][posX + moveX] && mapArr[posY][posX] > 1)
 		(*checkCanMove)++;
 	// 이동 가능 체크
 
@@ -643,11 +643,33 @@ void DeleteInput(int *kbhitCnt)
 ---------- 출력관련 함수 ----------
 */
 
+
+void ClearScreen()
+{
+	COORD pos;
+	pos.X = 0;
+	pos.Y = 0;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+
+	for (int i = 0; i < 46; i++)
+	{
+		printf("                                            \n");
+	}
+}
+
+
 void PrintArr(int(*mapArr)[BASICARRSIZE], char *string, int *kbhitCnt, int *nowScore, int *highestScore)
 {
 	int checkNum = 0;
 	Sleep(200);
 	system("cls");
+	//ClearScreen();
+
+	//COORD pos;
+	//pos.X = 0;
+	//pos.Y = 0;
+	//SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+
 	printf("\n\n     [ NOW_SCORE ]  2048  [ HIGHSCORE ]");
 	printf("\n    [%12d ]      [%12d ]  \n\n\n", *nowScore, *highestScore);
 	printf(" >> Now status '%s'\n\n", string);
@@ -671,9 +693,11 @@ void PrintArr(int(*mapArr)[BASICARRSIZE], char *string, int *kbhitCnt, int *nowS
 			TextColor(WHITE, BLACK);
 			printf("|");
 			TextColor(WHITE - checkNum, BLACK + checkNum);
-			if(mapArr[i][j]!=1)
+			if (mapArr[i][j] > 1)
 				printf("%6d", mapArr[i][j]);
-			else
+			else if (mapArr[i][j] == 0)
+				printf("      ");
+			else if(mapArr[i][j] == 1)
 			{
 				TextColor(BLACK, WHITE);
 				printf("     X");
