@@ -8,6 +8,11 @@
 #include<math.h>
 #include<io.h>	// _access()
 
+#include<Digitalv.h>
+#include<mmsyscom.h>
+#pragma comment(lib, "winmm.lib")
+// bgm, soundEffect
+
 #define BLACK 0 
 #define WHITE 15
 #define BASICARRSIZE 4
@@ -20,5 +25,5 @@ enum CheckPos { upDownPos = 0, leftRightPos = 1 };
 enum CheckScene
 {
 	mainScene = 0, gameScene = 50, resultScene = 100, gameExit = -9999, startGame = 0,
-	inputNum_1 = 49, inputNum_2 = 50, inputBtn_Esc = 27
+	inputNum_1 = 49, inputNum_2 = 50, inputNum_3 = 51, inputNum_4 = 52, inputBtn_Esc = 27
 };
