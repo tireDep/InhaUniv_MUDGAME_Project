@@ -3,7 +3,7 @@
 #include "BasicHeader.h"	// BASICARRSIZE
 
 void SetValue(int *nowScore, int *highestScore, int *saveScore, int *checkPlay, int *inputMode, bool *isPlay, bool *isHighScore, bool *isBlock);
-int Start(int *highestScore);
+int Start(int *highestScore, bool isBlock);
 
 void SetBlock(int(*mapArr)[BASICARRSIZE]);
 void CheckBlockMode(int *inputMode, bool *isBlock);

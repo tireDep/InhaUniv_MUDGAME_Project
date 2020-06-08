@@ -56,10 +56,12 @@ void TutorialScreen(int *checkPlay, int inputNum)
 
 // ------------------------------------------------------------------------------------------------------------
 
-bool ResultScreen(bool *isHighScore, bool *isPlay, int *saveScore, int *checkPlay)
+bool ResultScreen(bool *isHighScore, bool *isPlay, int *saveScore, int *checkPlay, bool isBlock)
 {
 	FILE *openFp = NULL;
 	int inputNum = 0;
+	char fileName[128] = { 0 };
+
 	printf("AnyKey\n\n");
 	Sleep(200);
 	system("cls");
@@ -68,7 +70,13 @@ bool ResultScreen(bool *isHighScore, bool *isPlay, int *saveScore, int *checkPla
 	if (*isHighScore == TRUE)
 	{
 		*saveScore = abs(*saveScore);
-		fopen_s(&openFp, "HighestScore.dat", "wb");
+
+		if (isBlock)
+			strcpy_s(fileName, "./HighestScore_Block.dat");
+		else
+			strcpy_s(fileName, "./HighestScore_Basic.dat");
+
+		fopen_s(&openFp, fileName, "wb");
 		if (openFp == NULL)
 		{
 			puts("FileError!");

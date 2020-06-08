@@ -39,6 +39,8 @@ int main()
 	bool isPlay = TRUE;
 	bool isHighScore = TRUE;
 	bool isBlock = TRUE;
+	bool isContinue = FALSE;
+	bool tempMode = TRUE;
 
 	int inputMode = 0;
 	int nowScore = 0;
@@ -63,18 +65,30 @@ int main()
 
 		if (checkPlay == mainScene)
 		{
+			size_t cnt;
+			char buffer[] = ".\\sound\\bgm2.mp3";
+			wchar_t bgmName[30] = L"";
+			// mbstowcs_s(bgmName, buffer, strlen(buffer) + 1);
+			mbstowcs_s(&cnt, bgmName, strlen(buffer) + 1, buffer, strlen(buffer) + 1);
+			LPCWSTR lpcBgmName = bgmName;
+
+			strcpy_s(buffer, "mpegvideo");
+			wchar_t fileType[30] = L"";
+			// mbstowcs_s(typeName, buffer, strlen(buffer) + 1);
+			mbstowcs_s(&cnt, fileType, strlen(buffer) + 1, buffer, strlen(buffer) + 1);
+			LPCWSTR lpcTypeName= fileType;
+
 			mciSendCommandW(dwID, MCI_CLOSE, 0, NULL);
-			mciOpen.lpstrElementName = ".\\sound\\bgm2.mp3"; // 파일 경로 입력
-			mciOpen.lpstrDeviceType = "mpegvideo";
-			// 밑줄 뜰 경우, 프로젝트 -> (가장 아래있는)속성 -> 구성속성 -> 문자 집합 -> 설정 안함
+			mciOpen.lpstrElementName = lpcBgmName; // 파일 경로 입력
+			mciOpen.lpstrDeviceType = lpcTypeName;
 
 			mciSendCommand(NULL, MCI_OPEN, MCI_OPEN_ELEMENT | MCI_OPEN_TYPE,
 				(DWORD)(LPVOID)&mciOpen);
-
 			dwID = mciOpen.wDeviceID;
-
 			mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, // play & repeat
 				(DWORD)(LPVOID)&m_mciPlayParms);
+
+			// bgm 관련
 
 			MainScreen(&checkPlay);
 		}
@@ -82,10 +96,18 @@ int main()
 		if (checkPlay == gameScene)
 		{
 			SetValue(&nowScore, &highestScore, &saveScore, &checkPlay, &inputMode, &isPlay, &isHighScore, &isBlock);
-			Start(&highestScore);
-			CheckBlockMode(&inputMode, &isBlock);
+			if (!isContinue)
+			{
+				CheckBlockMode(&inputMode, &isBlock);
+				tempMode = isBlock;
+			}
+			else
+			{
+				isBlock = tempMode;
+			}
+			Start(&highestScore, isBlock);
 
-			mciSendCommandW(dwID, MCI_CLOSE, 0, NULL);
+		/*	mciSendCommandW(dwID, MCI_CLOSE, 0, NULL);
 			mciOpen.lpstrElementName = ".\\sound\\bgm3.mp3"; // 파일 경로 입력
 			mciOpen.lpstrDeviceType = "mpegvideo";
 
@@ -94,20 +116,22 @@ int main()
 
 			dwID = mciOpen.wDeviceID;
 			mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, // play & repeat
-				(DWORD)(LPVOID)&m_mciPlayParms);
+				(DWORD)(LPVOID)&m_mciPlayParms);*/
 
 			Update(&checkPlay, &saveScore, &nowScore, &highestScore, isBlock);
 
 			if (checkPlay == gameScene)
 			{
-				mciOpen.lpstrElementName = ".\\sound\\highDown.mp3"; // 파일 경로 입력
+				isContinue = TRUE;
+
+				/*mciOpen.lpstrElementName = ".\\sound\\highDown.mp3"; // 파일 경로 입력
 				mciOpen.lpstrDeviceType = "mpegvideo";
 				mciSendCommand(NULL, MCI_OPEN, MCI_OPEN_ELEMENT | MCI_OPEN_TYPE,
 					(DWORD)(LPVOID)&mciOpen);
 
 				dwID = mciOpen.wDeviceID;
 				mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, // play & repeat
-					(DWORD)(LPVOID)&m_mciPlayParms);
+					(DWORD)(LPVOID)&m_mciPlayParms);*/
 
 				printf("ReStart\n\n>> ReStart Game\n\nReady to New Game : ");
 				for (int i = 5; i > 0; i--)
@@ -120,10 +144,12 @@ int main()
 
 		if (checkPlay == resultScene)
 		{
+			isContinue = FALSE;
+
 			if (saveScore < 0)
 			{
 				isHighScore = TRUE;
-				ResultScreen(&isHighScore, &isPlay, &saveScore, &checkPlay);
+				ResultScreen(&isHighScore, &isPlay, &saveScore, &checkPlay, isBlock);
 				if (!isPlay)
 					break;
 				else
@@ -132,7 +158,7 @@ int main()
 			else
 			{
 				isHighScore = FALSE;
-				ResultScreen(&isHighScore, &isPlay, &saveScore, &checkPlay);
+				ResultScreen(&isHighScore, &isPlay, &saveScore, &checkPlay, isBlock);
 				if (!isPlay)
 					break;
 				else

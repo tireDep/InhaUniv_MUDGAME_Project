@@ -14,14 +14,20 @@ void SetValue(int *nowScore, int *highestScore, int *saveScore, int *checkPlay, 
 	*isBlock = FALSE;
 }
 
-int Start(int *highestScore)
+int Start(int *highestScore, bool isBlock)
 {
 	FILE *openFp = NULL;
+	char fileName[128] = { 0 };
 
-	if (_access("./HighestScore.dat", 00) == 0)	// 파일이 존재하는 경우
-		fopen_s(&openFp, "HighestScore.dat", "rb");
+	if (isBlock)
+		strcpy_s(fileName, "./HighestScore_Block.dat");
 	else
-		fopen_s(&openFp, "HighestScore.dat", "wb");
+		strcpy_s(fileName, "./HighestScore_Basic.dat");
+
+	if (_access(fileName, 00) == 0)	// 파일이 존재하는 경우
+		fopen_s(&openFp, fileName, "rb");
+	else
+		fopen_s(&openFp, fileName, "wb");
 
 	if (openFp == NULL)
 	{
