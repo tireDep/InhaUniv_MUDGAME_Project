@@ -116,8 +116,9 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 			mciSendCommandW(dwID, MCI_PAUSE, MCI_NOTIFY, (DWORD)(LPVOID)&m_mciPlayParms); // bgm pause
 			if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
 
-			printf(">> Pause\n\n[ OPTION ]\n- If You Continue Game, push '1'\n- ReStart Game, push '2'\n- Game Over, push 'AntKey'\n\n");
-			printf("[ SOUND ]\n- BGM On/Off, push '3',\n- SoundeEffect On/Off, push '4'\n\nInput : ");
+			printf(">> Pause\n\n[ OPTION ]\n- If You Continue Game, push '1'\n- ReStart Game, push '2'\n\n");
+			printf("[ SOUND ]\n- BGM On/Off, push '3',\n- SoundeEffect On/Off, push '4'\n\n");
+			printf("[ EXIT ]\n- Game Over, push 'AntKey'\n\nInput : ");
 			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay, isBgm, isSoundEffect))
 			{
 				if (*isBgm) mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
@@ -155,8 +156,9 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 			mciSendCommandW(dwID, MCI_PAUSE, MCI_NOTIFY, (DWORD)(LPVOID)&m_mciPlayParms); // bgm pause
 			if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
 
-			printf("\n>> GameOver\n\n[ OPTION ]\n- If You Revert Game, push '1'\n- ReStart Game, push '2'\n- Game Over, push 'AntKey'\n\n");
-			printf("[ SOUND ]\n- BGM On/Off, push '3',\n- SoundeEffect On/Off, push '4'\n\nInput : ");
+			printf("\n>> GameOver\n\n[ OPTION ]\n- If You Revert Game, push '1'\n- ReStart Game, push '2'\n\n");
+			printf("[ SOUND ]\n- BGM On/Off, push '3',\n- SoundeEffect On/Off, push '4'\n\n");
+			printf("[ EXIT ]\n- Game Over, push 'AntKey'\n\nInput : ");
 			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay, isBgm, isSoundEffect))
 			{
 				if (*isBgm) mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
@@ -194,8 +196,9 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 			mciSendCommandW(dwID, MCI_PAUSE, MCI_NOTIFY, (DWORD)(LPVOID)&m_mciPlayParms); // bgm pause
 			if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
 
-			printf("\n>> Congratulations!\n>> You Made a MaxNumber!\n\n[ OPTION ]\n- Go to Main, push '1'\n- Start New Game, push '2'\n- Finish Game, push 'AnyKey'\n\n");
-			printf("[ SOUND ]\n- BGM On/Off, push '3',\n- SoundeEffect On/Off, push '4'\n\nInput : ");
+			printf("\n>> Congratulations!\n>> You Made a MaxNumber!\n\n[ OPTION ]\n- Go to Main, push '1'\n- Start New Game, push '2'\n\n");
+			printf("[ SOUND ]\n- BGM On/Off, push '3',\n- SoundeEffect On/Off, push '4'\n\n");
+			printf("[ EXIT ]\n- Game Over, push 'AntKey'\n\nInput : ");
 
 			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay, isBgm, isSoundEffect))
 			{
