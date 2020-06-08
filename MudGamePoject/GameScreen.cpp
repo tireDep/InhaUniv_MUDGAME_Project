@@ -643,7 +643,7 @@ void DeleteInput(int *kbhitCnt)
 ---------- 출력관련 함수 ----------
 */
 
-
+/*
 void ClearScreen()
 {
 	COORD pos;
@@ -656,7 +656,7 @@ void ClearScreen()
 		printf("                                            \n");
 	}
 }
-
+*/
 
 void PrintArr(int(*mapArr)[BASICARRSIZE], char *string, int *kbhitCnt, int *nowScore, int *highestScore)
 {
@@ -665,14 +665,15 @@ void PrintArr(int(*mapArr)[BASICARRSIZE], char *string, int *kbhitCnt, int *nowS
 	system("cls");
 	//ClearScreen();
 
-	//COORD pos;
-	//pos.X = 0;
-	//pos.Y = 0;
-	//SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
-
 	printf("\n\n     [ NOW_SCORE ]  2048  [ HIGHSCORE ]");
 	printf("\n    [%12d ]      [%12d ]  \n\n\n", *nowScore, *highestScore);
 	printf(" >> Now status '%s'\n\n", string);
+	
+	COORD pos;
+	pos.X = 0;
+	pos.Y = 8;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+
 	for (int i = 0; i < BASICARRSIZE; i++)
 	{
 		CheckKbhitCnt(kbhitCnt);
