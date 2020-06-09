@@ -12,27 +12,6 @@ int dwID;
 
 int main()
 {
-	/*mciOpen.lpstrElementName = ".\\sound\\bgm2.mp3"; // 파일 경로 입력
-	mciOpen.lpstrDeviceType = "mpegvideo";
-	// 밑줄 뜰 경우, 프로젝트 -> (가장 아래있는)속성 -> 구성속성 -> 문자 집합 -> 설정 안함
-
-	mciSendCommand(NULL, MCI_OPEN, MCI_OPEN_ELEMENT | MCI_OPEN_TYPE,
-		(DWORD)(LPVOID)&mciOpen);
-
-	dwID = mciOpen.wDeviceID;
-
-	mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, // play & repeat
-		(DWORD)(LPVOID)&m_mciPlayParms);*/
-
-
-	/* mciSendCommandW(dwID, MCI_PAUSE, MCI_NOTIFY,
-	(DWORD)(LPVOID)&m_mciPlayParms); */// Pause
-
-	/* mciSendCommandW(dwID, MCI_RESUME, 0, NULL); */// resume
-
-   /* mciSendCommandW(dwID, MCI_CLOSE, 0, NULL); */// stop
-
-
 	bool isPlay = TRUE;
 	bool isHighScore = TRUE;
 	bool isBlock = TRUE;
@@ -53,13 +32,6 @@ int main()
 	system("title MUD_2048");
 	CursorView(0);
 
-	// todo : 메인화면 및 튜토리얼
-	// +) Maybe : 랭킹
-
-	// todo : 게임 화면
-	// +) Maybe : 맵 크기 확장, 랭킹
-
-
 	size_t cnt;
 	char buffer[] = ".\\sound\\bgm.wav";
 	wchar_t bgmName[30] = L"";
@@ -79,6 +51,7 @@ int main()
 	dwID = mciOpen.wDeviceID;
 
 	mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);	// play & repeat
+	// bgm
 
 	while (1)
 	{
@@ -108,7 +81,7 @@ int main()
 				isBlock = tempMode;
 			}
 
-			Start(&highestScore, isBlock);
+			Start(&highestScore, isBlock, blockCnt);
 			Update(&checkPlay, &saveScore, &nowScore, &highestScore, blockCnt, isBlock, &isBgm, &isSoundEffect);
 
 			if (checkPlay == gameScene)
@@ -130,7 +103,7 @@ int main()
 			if (saveScore < 0)
 			{
 				isHighScore = TRUE;
-				ResultScreen(&isHighScore, &isPlay, &saveScore, &checkPlay, isBlock, isSoundEffect);
+				ResultScreen(&isHighScore, &isPlay, &saveScore, &checkPlay, isBlock, isSoundEffect, blockCnt);
 				if (!isPlay)
 					break;
 				else
@@ -139,7 +112,7 @@ int main()
 			else
 			{
 				isHighScore = FALSE;
-				ResultScreen(&isHighScore, &isPlay, &saveScore, &checkPlay, isBlock, isSoundEffect);
+				ResultScreen(&isHighScore, &isPlay, &saveScore, &checkPlay, isBlock, isSoundEffect, blockCnt);
 				if (!isPlay)
 					break;
 				else
@@ -149,9 +122,7 @@ int main()
 	}	// while()
 
 	printf("\n\n\n              [ Game Exit ]\n\n");
+	
 	_getch();
 	return 0;
-
-	// todo : 게임 종료 화면
-	// +) Maybe : 랭킹
 }
