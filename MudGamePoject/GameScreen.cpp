@@ -163,7 +163,7 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 
 			printf("\n>> GameOver\n\n[ OPTION ]\n- If You Revert Game, push '1'\n- ReStart Game, push '2'\n\n");
 			printf("[ SOUND ]\n- BGM On/Off, push '3',\n- SoundeEffect On/Off, push '4'\n\n");
-			printf("[ GAME OVER ]\n- Game Over, push 'AntKey'\n\nInput : ");
+			printf("[ GAME OVER ]\n- Game Over, push 'AnyKey'\n\nInput : ");
 			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay, isBgm, isSoundEffect))
 			{
 				if (*isBgm) mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
