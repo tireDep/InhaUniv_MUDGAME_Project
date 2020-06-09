@@ -108,7 +108,7 @@ int main()
 				isBlock = tempMode;
 			}
 
-			Start(&highestScore, isBlock);
+			Start(&highestScore, isBlock, blockCnt);
 			Update(&checkPlay, &saveScore, &nowScore, &highestScore, blockCnt, isBlock, &isBgm, &isSoundEffect);
 
 			if (checkPlay == gameScene)
@@ -130,7 +130,7 @@ int main()
 			if (saveScore < 0)
 			{
 				isHighScore = TRUE;
-				ResultScreen(&isHighScore, &isPlay, &saveScore, &checkPlay, isBlock, isSoundEffect);
+				ResultScreen(&isHighScore, &isPlay, &saveScore, &checkPlay, isBlock, isSoundEffect, blockCnt);
 				if (!isPlay)
 					break;
 				else
@@ -139,7 +139,7 @@ int main()
 			else
 			{
 				isHighScore = FALSE;
-				ResultScreen(&isHighScore, &isPlay, &saveScore, &checkPlay, isBlock, isSoundEffect);
+				ResultScreen(&isHighScore, &isPlay, &saveScore, &checkPlay, isBlock, isSoundEffect, blockCnt);
 				if (!isPlay)
 					break;
 				else

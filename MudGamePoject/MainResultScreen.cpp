@@ -128,7 +128,7 @@ void SoundOption(bool *isBgm, bool *isSoundEffect, int *checkPlay)
 
 // ------------------------------------------------------------------------------------------------------------
 
-bool ResultScreen(bool *isHighScore, bool *isPlay, int *saveScore, int *checkPlay, bool isBlock, bool isSoundEffect)
+bool ResultScreen(bool *isHighScore, bool *isPlay, int *saveScore, int *checkPlay, bool isBlock, bool isSoundEffect, int blockCnt)
 {
 	FILE *openFp = NULL;
 	int inputNum = 0;
@@ -144,7 +144,12 @@ bool ResultScreen(bool *isHighScore, bool *isPlay, int *saveScore, int *checkPla
 		*saveScore = abs(*saveScore);
 
 		if (isBlock)
-			strcpy_s(fileName, "./HighestScore_Block.dat");
+		{
+			if (blockCnt == 1)
+				strcpy_s(fileName, "./HighestScore_Block2.dat");
+			else
+				strcpy_s(fileName, "./HighestScore_Block3.dat");
+		}
 		else
 			strcpy_s(fileName, "./HighestScore_Basic.dat");
 

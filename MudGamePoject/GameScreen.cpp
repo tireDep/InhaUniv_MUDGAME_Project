@@ -23,13 +23,18 @@ void SetValue(int *nowScore, int *highestScore, int *saveScore, int *checkPlay, 
 	*isBlock = FALSE;
 }
 
-int Start(int *highestScore, bool isBlock)
+int Start(int *highestScore, bool isBlock, int blockCnt)
 {
 	FILE *openFp = NULL;
 	char fileName[128] = { 0 };
 
 	if (isBlock)
-		strcpy_s(fileName, "./HighestScore_Block.dat");
+	{
+		if (blockCnt == 1)
+			strcpy_s(fileName, "./HighestScore_Block2.dat");
+		else
+			strcpy_s(fileName, "./HighestScore_Block3.dat");
+	}
 	else
 		strcpy_s(fileName, "./HighestScore_Basic.dat");
 
