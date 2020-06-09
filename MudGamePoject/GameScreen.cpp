@@ -8,7 +8,7 @@ extern MCI_OPEN_PARMS mciOpen;
 extern MCI_PLAY_PARMS mciPlay;
 
 extern int dwID;
-// 일시정지 등 특정 상황에서 bgm 제어
+// BGM, Sound Effect
 
 void SetValue(int *nowScore, int *highestScore, int *saveScore, int *checkPlay, int *inputMode, bool *isPlay, bool *isHighScore, bool *isBlock)
 {
@@ -31,9 +31,9 @@ int Start(int *highestScore, bool isBlock, int blockCnt)
 	if (isBlock)
 	{
 		if (blockCnt == 1)
-			strcpy_s(fileName, "./HighestScore_Block2.dat");
+			strcpy_s(fileName, "./HighestScore_Block1.dat");
 		else
-			strcpy_s(fileName, "./HighestScore_Block3.dat");
+			strcpy_s(fileName, "./HighestScore_Block2.dat");
 	}
 	else
 		strcpy_s(fileName, "./HighestScore_Basic.dat");
@@ -111,7 +111,7 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 		SetBlock(mapArr, blockCnt);	// 랜덤 장애물 설정
 	}
 	PrintArr(mapArr, "START", &kbhitCnt, nowScore, highestScore);
-	// mapArr[1][1] = BASICARR_MAXNUM;
+	// mapArr[1][1] = BASICARR_MAXNUM;	// Clear
 	while (1)
 	{
 		PlayerInput(mapArr, &checkCanMove, &checkGameOver, &checkMaxNum, &kbhitCnt, nowScore, highestScore);
@@ -530,11 +530,6 @@ void MoveToInput(int(*mapArr)[BASICARRSIZE], int *posY, int *posX, int moveY, in
 			{
 				*highestScore = *nowScore;
 			}
-
-			//if (moveTo == upDownPos)
-			//	*posY += setNext;
-			//else
-			//	*posX += setNext;
 		}
 	}
 }
@@ -610,9 +605,7 @@ bool CheckGameContinue(int(*mapArr)[4], int *kbhitCnt, int *checkPlay, bool *isB
 	}
 }
 
-/*
----------- 입력무시(삭제) 함수 ----------
-*/
+// ------------------------------------------------------------------------------------------------------------
 
 void CheckKbhitCnt(int *kbhitCnt)
 {
@@ -643,32 +636,13 @@ void DeleteInput(int *kbhitCnt)
 	}
 }
 
-
-/*
----------- 출력관련 함수 ----------
-*/
-
-/*
-void ClearScreen()
-{
-	COORD pos;
-	pos.X = 0;
-	pos.Y = 0;
-	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
-
-	for (int i = 0; i < 46; i++)
-	{
-		printf("                                            \n");
-	}
-}
-*/
+// ------------------------------------------------------------------------------------------------------------
 
 void PrintArr(int(*mapArr)[BASICARRSIZE], char *string, int *kbhitCnt, int *nowScore, int *highestScore)
 {
 	int checkNum = 0;
 	Sleep(200);
 	system("cls");
-	//ClearScreen();
 
 	printf("\n\n     [ NOW_SCORE ]  2048  [ HIGHSCORE ]");
 	printf("\n    [%12d ]      [%12d ]  \n\n\n", *nowScore, *highestScore);
