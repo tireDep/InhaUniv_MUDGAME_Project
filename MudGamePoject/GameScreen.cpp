@@ -384,7 +384,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 					if (IsCanMove(mapArr, j, i, checkCanMove, checkGameOver, checkMaxNum, minusPos, zeroPos))
 						return;
 				}
-				if (mapArr[BASICARRSIZE - 1][i] != 0)	// 맨 마지막 값 저장
+				if (mapArr[zeroPos][i] != 0)	// 맨 마지막 값 저장
 					(*checkGameOver)++;
 
 				if (mapArr[BASICARRSIZE - 1][i] == BASICARR_MAXNUM)	// 최댓값 확인
@@ -447,7 +447,7 @@ void PlayerInput(int(*mapArr)[BASICARRSIZE], int *checkCanMove, int *checkGameOv
 					if (IsCanMove(mapArr, i, j, checkCanMove, checkGameOver, checkMaxNum, zeroPos, minusPos))
 						return;
 				}
-				if (mapArr[i][BASICARRSIZE - 1] != 0)	// 맨 마지막 값 저장
+				if (mapArr[i][zeroPos] != 0)	// 맨 마지막 값 저장
 					(*checkGameOver)++;
 
 				if (mapArr[i][BASICARRSIZE - 1] == BASICARR_MAXNUM)	// 최댓값 확인
