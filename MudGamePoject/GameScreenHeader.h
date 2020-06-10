@@ -27,3 +27,7 @@ void DeleteInput(int *kbhitCnt);
 void CheckKbhitCnt(int *kbhitCnt);
 
 void CursorView(char show);
+
+void ClearScreen_ReStart();
+void CheckHighScore(int *nowScore, int *highestScore, int prevScore, int *saveScore, int *checkPlay, int sceneNum);
+void CheckSaveHighScore(int *checkPlay, int *highestScore, int *saveScore);
