@@ -3,11 +3,10 @@
 
 extern MCI_OPEN_PARMS m_mciOpenParms;
 extern MCI_PLAY_PARMS m_mciPlayParms;
-extern DWORD m_dwDeviceID;
 extern MCI_OPEN_PARMS mciOpen;
 extern MCI_PLAY_PARMS mciPlay;
-
 extern DWORD dwID;
+
 // BGM, Sound Effect
 
 void SetValue(int *nowScore, int *highestScore, int *saveScore, int *checkPlay, int *inputMode, bool *isPlay, bool *isHighScore, bool *isBlock)
@@ -20,7 +19,7 @@ void SetValue(int *nowScore, int *highestScore, int *saveScore, int *checkPlay, 
 
 	*isPlay = TRUE;
 	*isHighScore = TRUE;
-	*isBlock = FALSE;
+	//*isBlock = FALSE;
 }
 
 int Start(int *highestScore, bool isBlock, int blockCnt)
