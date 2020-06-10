@@ -65,7 +65,6 @@ int main()
 
 		if (checkPlay == gameSelectScene)
 		{
-			system("pause");
 			if (isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
 			SetValue(&nowScore, &highestScore, &saveScore, &checkPlay, &inputMode, &isPlay, &isHighScore, &isBlock);
 			if (!isContinue)

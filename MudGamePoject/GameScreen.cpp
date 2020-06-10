@@ -56,7 +56,6 @@ int Start(int *highestScore, bool isBlock, int blockCnt)
 
 void CheckBlockMode(int *inputMode, bool *isBlock, bool *isSoundEffect, int *checkPlay, int *blockCnt)
 {
-	printf("asdasd");
 	if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
 	BYTE menuGap = 3;
 	BYTE baseX = 14;
