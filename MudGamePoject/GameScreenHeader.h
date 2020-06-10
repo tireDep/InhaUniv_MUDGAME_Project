@@ -1,7 +1,6 @@
 #pragma once
 
 #include "BasicHeader.h"	// BASICARRSIZE
-
 void SetValue(int *nowScore, int *highestScore, int *saveScore, int *checkPlay, int *inputMode, bool *isPlay, bool *isHighScore, bool *isBlock);
 int Start(int *highestScore, bool isBlock, int blockCnt);
 
@@ -20,7 +19,6 @@ void SetAbsVal_UpDown(int(*mapArr)[BASICARRSIZE], int posX);
 void SetAbsVal_RightLeft(int(*mapArr)[BASICARRSIZE], int posY);
 
 void PrintArr(int(*mapArr)[BASICARRSIZE], char *string, int *kbhitCnt, int *nowScore, int *highestScore);
-void TextColor(int foreground, int background);
 
 bool CheckGameContinue(int(*mapArr)[4], int *kbhitCnt, int *checkPlay, bool *isBgm, bool *isSoundEffect);
 void PrintNewInput(int(*mapArr)[4], char *string, int *kbhitCnt, int *nowScore, int *highestScore);

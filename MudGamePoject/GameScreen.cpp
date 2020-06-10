@@ -7,7 +7,7 @@ extern DWORD m_dwDeviceID;
 extern MCI_OPEN_PARMS mciOpen;
 extern MCI_PLAY_PARMS mciPlay;
 
-extern int dwID;
+extern DWORD dwID;
 // BGM, Sound Effect
 
 void SetValue(int *nowScore, int *highestScore, int *saveScore, int *checkPlay, int *inputMode, bool *isPlay, bool *isHighScore, bool *isBlock)
@@ -15,7 +15,7 @@ void SetValue(int *nowScore, int *highestScore, int *saveScore, int *checkPlay, 
 	*nowScore = 0;
 	*highestScore = 0;
 	*saveScore = 0;
-	*checkPlay = 0;
+	//*checkPlay = 0;
 	*inputMode = 0;
 
 	*isPlay = TRUE;
@@ -56,17 +56,26 @@ int Start(int *highestScore, bool isBlock, int blockCnt)
 
 void CheckBlockMode(int *inputMode, bool *isBlock, bool *isSoundEffect, int *checkPlay, int *blockCnt)
 {
+	printf("asdasd");
 	if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
-
+	BYTE menuGap = 3;
+	BYTE baseX = 14;
+	BYTE baseY = 15;
+	BYTE maxMenu = 3;
+	BYTE menuString[3][20] = {
+		" 1. Nomal Mode   ",
+		" 2. Hard  Mode   ",
+		" 3. Prev  Menu   ",
+	};
 	system("cls");
-	printf("\n\n\n\n\n\n\n\n\n\n\n\n");
-	printf("          [ Choose Your Game Mode ]\n\n\n\n");
-	printf("    >> Normal Mode : Push '1'\n\n      (Normal 2048)\n\n\n\n");
-	printf("    >> Block Mode : Push '2' or '3'\n\n      (Random Position Block)\n\n");
-	printf("      - 2 : 1 Block\n\n      - 3 : 2 Block\n\n\n\n");
-	printf("    >> Go to Main : Push 'AnyKey'\n\n");
+	printf("\n\n\n\n\n\n\n\n\n");
+	printf("          [ Choose Your Game Mode ]\n\n\n\n\n\n");
+	printf("             [ 1. Nomal Mode   ]\n\n\n");
+	printf("             [ 2. Hard  Mode   ]\n\n\n");
+	printf("             [ 3. Prev  Menu   ]\n\n\n");
 
-	*inputMode = _getch();
+	*inputMode = SelectMenu(baseX, baseY, menuGap, maxMenu, menuString);
+	
 	if (*inputMode == inputNum_1)
 	{
 		if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
@@ -75,18 +84,39 @@ void CheckBlockMode(int *inputMode, bool *isBlock, bool *isSoundEffect, int *che
 	}
 	else if (*inputMode == inputNum_2)
 	{
-		if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
+		system("cls");
+		printf("\n\n\n\n\n\n");
+		printf("       _   _    ___   ______  ______ \n");
+		printf("      | | | |  / _ \\  | ___ \\ |  _  \\\n");
+		printf("      | |_| | / /_\\ \\ | |_/ / | | | |\n");
+		printf("      |  _  | |  _  | |    /  | | | |\n");
+		printf("      | | | | | | | | | |\\ \\  | |/ / \n");
+		printf("      |_| |_| |_| |_| |_| \\_| |___/  \n\n\n\n\n\n");
+		printf("             [ 1. Block 1      ]\n\n\n");
+		printf("             [ 2. Block 2      ]\n\n\n");
+		printf("             [ 3. Prev  Menu   ]\n\n\n");
+		maxMenu = 3;
+		strcpy_s((char *)menuString[0], 18, " 1. Block 1      ");
+		strcpy_s((char *)menuString[1], 18, " 2. Block 2      ");
+		baseY = 17;
+		*inputMode = SelectMenu(baseX, baseY, menuGap, maxMenu, menuString);
+		if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);   // soundEffect
 		*checkPlay = gameScene;
-		*blockCnt = 1;
 		*isBlock = TRUE;
+		if (*inputMode == inputNum_1)
+		{
+			*blockCnt = 1;
+		}
+		else if (*inputMode == inputNum_2)
+		{
+			*blockCnt = 2;
+		}
+		else if (*inputMode == inputNum_3)
+		{
+			*checkPlay = gameSelectScene;
+		}
 	}
-	else if (*inputMode == inputNum_3)
-	{
-		if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
-		*checkPlay = gameScene;
-		*blockCnt = 2;
-		*isBlock = TRUE;
-	}
+	
 	else
 	{
 		if (*isSoundEffect) sndPlaySoundA(".\\sound\\highDown.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
@@ -703,12 +733,6 @@ void PrintNewInput(int(*mapArr)[4], char *string, int *kbhitCnt, int *nowScore, 
 		DeleteInput(kbhitCnt);
 	}
 	PrintArr(mapArr, "NewInput", kbhitCnt, nowScore, highestScore);
-}
-
-void TextColor(int foreground, int background)
-{
-	int color = foreground + background * 16;
-	SetConsoleTextAttribute(GetStdHandle(STD_OUTPUT_HANDLE), color);
 }
 
 void CursorView(char show)
