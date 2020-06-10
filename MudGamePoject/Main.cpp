@@ -66,7 +66,6 @@ int main()
 		if (checkPlay == gameSelectScene)
 		{
 			if (isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
-			SetValue(&nowScore, &highestScore, &saveScore, &checkPlay, &inputMode, &isPlay, &isHighScore, &isBlock);
 			if (!isContinue)
 			{
 				while (checkPlay == gameSelectScene)
@@ -82,18 +81,21 @@ int main()
 				isBlock = tempMode;
 			}
 
+			
+		}
+		
+
+		if (checkPlay == gameScene)
+		{
+			SetValue(&nowScore, &highestScore, &saveScore, &checkPlay, &inputMode, &isPlay, &isHighScore, &isBlock);
 			Start(&highestScore, isBlock, blockCnt);
 			Update(&checkPlay, &saveScore, &nowScore, &highestScore, blockCnt, isBlock, &isBgm, &isSoundEffect);
-
-			if (checkPlay == gameScene)
+			isContinue = TRUE;
+			printf("ReStart\n\n>> ReStart Game\n\nReady to New Game : ");
+			for (int i = 5; i > 0; i--)
 			{
-				isContinue = TRUE;
-				printf("ReStart\n\n>> ReStart Game\n\nReady to New Game : ");
-				for (int i = 5; i > 0; i--)
-				{
-					Sleep(100);
-					printf("%d ", i);
-				}
+				Sleep(100);
+				printf("%d ", i);
 			}
 		}
 
