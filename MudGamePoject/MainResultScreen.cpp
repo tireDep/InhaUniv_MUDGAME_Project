@@ -7,12 +7,25 @@ extern DWORD m_dwDeviceID;
 extern MCI_OPEN_PARMS mciOpen;
 extern MCI_PLAY_PARMS mciPlay;
 
-extern int dwID;
+extern DWORD dwID;
 // BGM, Sound Effect
 
 void MainScreen(int *checkPlay, bool *isBgm, bool *isSoundEffect)
 {
 	int inputNum = 0;
+	int curMenu = -1;
+
+	BYTE menuGap = 3;
+	BYTE baseX = 14;
+	BYTE baseY = 20;
+	BYTE maxMenu = 4;
+	BYTE menuString[4][20] =
+	{
+		" 1. Game Start   ",
+		" 2. Tutorial     ",
+		" 3. Sound Option ",
+		" 4. Exit         ",
+	};
 	system("cls");
 	printf("\n\n\n\n\n\n\n\n\n");
 	printf("         ___     ___     ___     ___  \n");
@@ -21,17 +34,16 @@ void MainScreen(int *checkPlay, bool *isBgm, bool *isSoundEffect)
 	printf("       |/___|  |/___|  |/___|  |/___| \n");
 	printf("\n\n\n\n\n\n\n");
 
-	printf("             [ 1. Game Start ]\n\n\n");
-	printf("             [ 2. Tutorial  ]\n\n\n");
-	printf("            [ 3. Sound Option ]\n\n\n\n\n\n");
+	printf("             [ 1. Game Start   ]\n\n\n");
+	printf("             [ 2. Tutorial     ]\n\n\n");
+	printf("             [ 3. Sound Option ]\n\n\n");
+	printf("             [ 4. Exit         ]\n\n\n\n\n\n");
 
-	printf("         Press Another Key is Exit...\n\n");
-
-	inputNum = _getch();
+	inputNum = SelectMenu(baseX, baseY, menuGap, maxMenu, menuString);
 
 	if (*isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
 	if (inputNum == inputNum_1)
-		*checkPlay = gameScene;	// 게임시작 선택시
+		*checkPlay = gameSelectScene;	// 게임시작 선택시
 
 	else if (inputNum == inputNum_2)
 		TutorialScreen(checkPlay, inputNum, isSoundEffect);
@@ -39,12 +51,12 @@ void MainScreen(int *checkPlay, bool *isBgm, bool *isSoundEffect)
 	else if (inputNum == inputNum_3)
 		SoundOption(isBgm, isSoundEffect, checkPlay);
 
-	else
+	else if (inputNum == inputNum_4)
 	{
 		if (*isSoundEffect) sndPlaySoundA(".\\sound\\highDown.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
 		*checkPlay = gameExit;
 	}
-		
+
 }
 
 void TutorialScreen(int *checkPlay, int inputNum, bool *isSoundEffect)
@@ -197,3 +209,4 @@ bool ResultScreen(bool *isHighScore, bool *isPlay, int *saveScore, int *checkPla
 	}
 	Sleep(200);
 }
+

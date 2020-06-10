@@ -8,7 +8,7 @@ DWORD m_dwDeviceID;
 MCI_OPEN_PARMS mciOpen;
 MCI_PLAY_PARMS mciPlay;
 
-int dwID;
+DWORD dwID = 0;
 
 int main()
 {
@@ -63,13 +63,14 @@ int main()
 			MainScreen(&checkPlay, &isBgm, &isSoundEffect);
 		}
 
-		if (checkPlay == gameScene)
+		if (checkPlay == gameSelectScene)
 		{
 			if (isSoundEffect) sndPlaySoundA(".\\sound\\highUp.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
 			SetValue(&nowScore, &highestScore, &saveScore, &checkPlay, &inputMode, &isPlay, &isHighScore, &isBlock);
 			if (!isContinue)
 			{
-				CheckBlockMode(&inputMode, &isBlock, &isSoundEffect, &checkPlay, &blockCnt);
+				while (checkPlay == gameSelectScene)
+					CheckBlockMode(&inputMode, &isBlock, &isSoundEffect, &checkPlay, &blockCnt);
 				if (checkPlay == mainScene)
 				{
 					continue;
@@ -120,9 +121,8 @@ int main()
 			}
 		}
 	}	// while()
-
 	printf("\n\n\n              [ Game Exit ]\n\n");
-	
+
 	_getch();
 	return 0;
 }
