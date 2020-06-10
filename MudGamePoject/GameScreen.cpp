@@ -162,10 +162,15 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 					PrintNewInput(mapArr, "Continue\n\n>> Continue Game\n\nReady to Continue : ", &kbhitCnt, nowScore, highestScore);
 					continue;
 				}
-				else
+				else // ReStart
 				{
-					*checkPlay = gameScene;
-					return 0;
+					if (prevScore < *highestScore)
+					{
+						ClearScreen_ReStart();
+						CheckSaveHighScore(checkPlay, highestScore, saveScore);
+					}
+					else
+						*checkPlay = gameScene;
 				}
 			}
 			else
@@ -174,13 +179,9 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 				if (*isBgm) mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
 				if (*isSoundEffect) sndPlaySoundA(".\\sound\\highDown.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
 
-				*checkPlay = resultScene;
-				if (prevScore < *highestScore)
-					*saveScore = -(*highestScore);	// 최댓값 갱신을 알리기 위한 음수화
-				else
-					*saveScore = *nowScore;
-				return 0;
+				CheckHighScore(nowScore, highestScore, prevScore, saveScore, checkPlay, resultScene);
 			}
+			return 0;
 		}
 
 		if (checkCanMove == 0 && checkGameOver == BASICARRSIZE * BASICARRSIZE)	// GameOver
@@ -204,8 +205,13 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 				}
 				else
 				{
-					*checkPlay = gameScene;
-					return 0;
+					if (prevScore < *highestScore)
+					{
+						ClearScreen_ReStart();
+						CheckSaveHighScore(checkPlay, highestScore, saveScore);
+					}
+					else
+						*checkPlay = gameScene;
 				}
 			}
 			else
@@ -214,13 +220,9 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 				if (*isBgm) mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
 				if (*isSoundEffect) sndPlaySoundA(".\\sound\\highDown.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
 
-				*checkPlay = resultScene;
-				if (prevScore < *highestScore)
-					*saveScore = -(*highestScore);	// 최댓값 갱신을 알리기 위한 음수화
-				else
-					*saveScore = *nowScore;
-				return 0;
+				CheckHighScore(nowScore, highestScore, prevScore, saveScore, checkPlay, resultScene);
 			}
+			return 0;
 		}
 
 		if (checkMaxNum == BASICARR_MAXNUM)	// MaxNum in it
@@ -238,19 +240,13 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 				if (*isBgm) mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
 				if (*isSoundEffect) sndPlaySoundA(".\\sound\\highDown.wav", SND_ASYNC | SND_NODEFAULT);
 
+				// todo : 메인으로 돌아가기 전 최고점수 저장해야할듯
 				if (*checkPlay == inputNum_1)
 				{
 					*checkPlay = mainScene;
 				}
 				else
-				{
-					// ※ : 리팩토링
-					*checkPlay = gameScene;
-					if (prevScore < *highestScore)
-						*saveScore = -(*highestScore);	// 최댓값 갱신을 알리기 위한 음수화
-					else
-						*saveScore = *nowScore;
-				}
+					CheckHighScore(nowScore, highestScore, prevScore, saveScore, checkPlay, gameScene);
 			}
 			else
 			{
@@ -258,11 +254,7 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 				if (*isBgm) mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
 				if (*isSoundEffect) sndPlaySoundA(".\\sound\\highDown.wav", SND_ASYNC | SND_NODEFAULT);	// soundEffect
 
-				*checkPlay = resultScene;
-				if (prevScore < *highestScore)
-					*saveScore = -(*highestScore);	// 최댓값 갱신을 알리기 위한 음수화
-				else
-					*saveScore = *nowScore;
+				CheckHighScore(nowScore, highestScore, prevScore, saveScore, checkPlay, resultScene);
 			}
 			return 0;
 		}
@@ -279,6 +271,44 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 			PrintNewInput(mapArr, "\n>> Can't Move\n\nReady to New Input : ", &kbhitCnt, nowScore, highestScore);
 			continue;
 		}
+	}
+}
+
+void CheckHighScore(int *nowScore, int *highestScore, int prevScore, int *saveScore, int *checkPlay, int sceneNum)
+{
+	*checkPlay = sceneNum;
+
+	if (prevScore < *highestScore)
+		*saveScore = -(*highestScore);	// 최댓값 갱신을 알리기 위한 음수화
+	else
+		*saveScore = *nowScore;
+}
+
+void CheckSaveHighScore(int *checkPlay, int *highestScore, int *saveScore)
+{
+	printf(">> ! WARNING !\n\n");
+	printf(">> If You ReStart Game, \n   Your Score is Not Save!\n\n");
+	printf(">> If You Want Save Score, Finish Game\n\n\n");
+	printf("[ ReStart ]\n- Not Save Score, push '1'\n\n");
+	printf("[ Finish Game ]\n- Save Score, push 'AntKey'\n\nInput : ");
+
+	int inputNum = 0;
+	inputNum = _getch();
+
+	if (inputNum == 224)	//  입력금지
+	{
+		while (inputNum == 224 || inputNum == 72 || inputNum == 75 || inputNum == 77 || inputNum == 80)
+		{
+			inputNum = _getch();
+		}
+	}
+	
+	if (inputNum == inputNum_1)
+		*checkPlay = gameScene;
+	else
+	{
+		*checkPlay = resultScene;
+		*saveScore = -(*highestScore);	// 최댓값 갱신을 알리기 위한 음수화
 	}
 }
 
@@ -744,4 +774,21 @@ void CursorView(char show)
 	ConsoleCursor.dwSize = 1;
 
 	SetConsoleCursorInfo(hConsole, &ConsoleCursor);
+}
+
+void ClearScreen_ReStart()
+{
+	COORD pos;
+	pos.X = 0;
+	pos.Y = 26;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
+
+	for (int i = pos.Y; i < 46; i++)
+	{
+		printf("                                           \n");
+	}
+
+	pos.X = 0;
+	pos.Y = 26;
+	SetConsoleCursorPosition(GetStdHandle(STD_OUTPUT_HANDLE), pos);
 }

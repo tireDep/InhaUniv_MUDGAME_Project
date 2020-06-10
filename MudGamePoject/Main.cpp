@@ -91,11 +91,15 @@ int main()
 			Start(&highestScore, isBlock, blockCnt);
 			Update(&checkPlay, &saveScore, &nowScore, &highestScore, blockCnt, isBlock, &isBgm, &isSoundEffect);
 			isContinue = TRUE;
-			printf("ReStart\n\n>> ReStart Game\n\nReady to New Game : ");
-			for (int i = 5; i > 0; i--)
+
+			if (checkPlay == gameScene)	// ★ : 이거 없으면 게임 종료할때도 카운트 다운 실행됨..
 			{
-				Sleep(100);
-				printf("%d ", i);
+				printf("ReStart\n\n>> ReStart Game\n\nReady to New Game : ");
+				for (int i = 5; i > 0; i--)
+				{
+					Sleep(100);
+					printf("%d ", i);
+				}
 			}
 		}
 
