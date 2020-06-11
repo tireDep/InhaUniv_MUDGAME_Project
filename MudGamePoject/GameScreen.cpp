@@ -151,7 +151,7 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 
 			printf(">> Pause\n\n[ OPTION ]\n- If You Continue Game, push '1'\n- ReStart Game, push '2'\n\n");
 			printf("[ SOUND ]\n- BGM On/Off, push '3',\n- SoundeEffect On/Off, push '4'\n\n");
-			printf("[ GAME OVER ]\n- Game Over, push 'AntKey'\n\nInput : ");
+			printf("[ GAME OVER ]\n- Game Over, push 'AnyKey'\n\nInput : ");
 			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay, isBgm, isSoundEffect))
 			{
 				if (*isBgm) mciSendCommand(dwID, MCI_PLAY, MCI_DGV_PLAY_REPEAT, (DWORD)(LPVOID)&m_mciPlayParms);
@@ -233,7 +233,7 @@ int Update(int *checkPlay, int *saveScore, int *nowScore, int *highestScore, int
 
 			printf("\n>> Congratulations!\n>> You Made a MaxNumber!\n\n[ OPTION ]\n- Go to Main, push '1'\n- Start New Game, push '2'\n\n");
 			printf("[ SOUND ]\n- BGM On/Off, push '3',\n- SoundeEffect On/Off, push '4'\n\n");
-			printf("[ GAME OVER ]\n- Game Over, push 'AntKey'\n\nInput : ");
+			printf("[ GAME OVER ]\n- Game Over, push 'AnyKey'\n\nInput : ");
 
 			if (CheckGameContinue(mapArr, &kbhitCnt, checkPlay, isBgm, isSoundEffect))
 			{
@@ -290,7 +290,7 @@ void CheckSaveHighScore(int *checkPlay, int *highestScore, int *saveScore)
 	printf(">> If You ReStart Game, \n   Your Score is Not Save!\n\n");
 	printf(">> If You Want Save Score, Finish Game\n\n\n");
 	printf("[ ReStart ]\n- Not Save Score, push '1'\n\n");
-	printf("[ Finish Game ]\n- Save Score, push 'AntKey'\n\nInput : ");
+	printf("[ Finish Game ]\n- Save Score, push 'AnyKey'\n\nInput : ");
 
 	int inputNum = 0;
 	inputNum = _getch();
