@@ -243,5 +243,4 @@ ModelManifest.xml
 .fake/
 
 # ScoreData
-**/*.HighestScore*.dat
-MudGamePoject/HighestScore_Basic.dat
+HighestScore*.dat
