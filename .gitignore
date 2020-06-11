@@ -244,3 +244,4 @@ ModelManifest.xml
 
 # ScoreData
 **/*.HighestScore*.dat
+MudGamePoject/HighestScore_Basic.dat
