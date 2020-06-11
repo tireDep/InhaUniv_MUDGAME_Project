@@ -24,12 +24,20 @@ void TextColor(int foreground, int background)
 
 BYTE SelectMenu(BYTE initX, BYTE initY, BYTE gap, BYTE maxMenu, BYTE menuString[][20])
 {
-	BYTE curMenu = -1;
+	BYTE curMenu = 0;
 	BYTE inputNum = 0;
+
+	inputNum = _getch();
+	GotoXY(initX, initY + (curMenu * gap));
+	TextColor(BLACK, WHITE);
+	printf("%s", menuString[curMenu]);
+	if (inputNum == arrowStart)
+		_getch();
+
 	while (inputNum = _getch())
 	{
 		EraseMenu(initX, initY, gap, maxMenu, menuString);
-		if (inputNum == enter)
+		if (inputNum == enter || inputNum == spaceBar)
 		{
 			inputNum = curMenu + 49;
 			break;
@@ -57,6 +65,7 @@ BYTE SelectMenu(BYTE initX, BYTE initY, BYTE gap, BYTE maxMenu, BYTE menuString[
 			TextColor(BLACK, WHITE);
 			printf("%s", menuString[curMenu]);
 		}
+		Sleep(50);
 	}
 	return inputNum;
 }
