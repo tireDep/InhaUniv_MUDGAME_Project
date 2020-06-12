@@ -25,10 +25,10 @@ enum NextPos { zeroPos = 0, arrSizePos = BASICARRSIZE, plusPos = 1, minusPos = -
 enum CheckPos { upDownPos = 0, leftRightPos = 1 };
 enum CheckScene
 {
-	mainScene = 0, gameSelectScene = 49, gameScene = 50, resultScene = 100, gameExit = -9999, startGame = 0,
+	mainScene = 0, gameSelectScene = 49, gameScene = 50, resultScene = 100, optionScene = 101, gameExit = -9999, startGame = 0,
 	inputNum_1 = 49, inputNum_2 = 50, inputNum_3 = 51, inputNum_4 = 52, inputBtn_Esc = 27,
 	arrowStart = 224, arrowUp = 72, arrowDown = 80, arrowLeft = 75, arrowRight = 77,
-	enter = 13
+	enter = 13, spaceBar = 32
 };
 
 
