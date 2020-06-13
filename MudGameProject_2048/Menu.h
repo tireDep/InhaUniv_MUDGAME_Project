@@ -1,4 +1,5 @@
 #pragma once
+
 #include "BasicHeader.h"
 
 void GotoXY(int x, int y);

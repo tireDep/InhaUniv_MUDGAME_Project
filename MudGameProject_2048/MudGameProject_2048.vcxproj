@@ -19,9 +19,9 @@
     </ProjectConfiguration>
   </ItemGroup>
   <PropertyGroup Label="Globals">
-    <ProjectGuid>{4050E77D-B632-4EF2-BAC1-056CA862B2A5}</ProjectGuid>
+    <ProjectGuid>{500B15D3-218B-402C-A9F6-32BB3406395E}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
-    <RootNamespace>MudGamePoject</RootNamespace>
+    <RootNamespace>MudGameProject_2048</RootNamespace>
     <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -146,16 +146,20 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="GameScreen.cpp" />
-    <ClCompile Include="Main.cpp" />
-    <ClCompile Include="MainResultScreen.cpp" />
-    <ClCompile Include="Menu.cpp" />
+    <ClInclude Include="BasicHeader.h" />
+    <ClInclude Include="GameScreen.h" />
+    <ClInclude Include="StartResultScreen.h" />
+    <ClInclude Include="Menu.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BasicHeader.h" />
-    <ClInclude Include="GameScreenHeader.h" />
-    <ClInclude Include="MainResultHeader.h" />
-    <ClInclude Include="Menu.h" />
+    <ClCompile Include="GameScreen.cpp" />
+    <ClCompile Include="GameSC_checkSys.cpp" />
+    <ClCompile Include="GameSC_printSys.cpp" />
+    <ClCompile Include="GameSC_setVal.cpp" />
+    <ClCompile Include="Main.cpp" />
+    <ClCompile Include="StartScreen.cpp" />
+    <ClCompile Include="Menu.cpp" />
+    <ClCompile Include="ResultScreen.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

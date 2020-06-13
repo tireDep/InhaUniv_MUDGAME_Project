@@ -11,7 +11,6 @@
 #include<Digitalv.h>
 #include<mmsyscom.h>
 #pragma comment(lib, "winmm.lib")
-#include "Menu.h"
 // bgm, soundEffect
 
 #define BLACK 0 
@@ -30,6 +29,3 @@ enum CheckScene
 	arrowStart = 224, arrowUp = 72, arrowDown = 80, arrowLeft = 75, arrowRight = 77,
 	enter = 13, spaceBar = 32
 };
-
-
-

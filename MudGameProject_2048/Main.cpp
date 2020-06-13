@@ -1,13 +1,12 @@
 #include "BasicHeader.h"
-#include "GameScreenHeader.h"
-#include "MainResultHeader.h"
+#include "GameScreen.h"
+#include "StartResultScreen.h"
+#include "Menu.h"
 
 MCI_OPEN_PARMS m_mciOpenParms;
 MCI_PLAY_PARMS m_mciPlayParms;
-DWORD m_dwDeviceID;
 MCI_OPEN_PARMS mciOpen;
 MCI_PLAY_PARMS mciPlay;
-
 DWORD dwID = 0;
 
 int main()
@@ -60,7 +59,7 @@ int main()
 
 		if (checkPlay == mainScene)
 		{
-			MainScreen(&checkPlay, &isBgm, &isSoundEffect);
+			StartScreen(&checkPlay, &isBgm, &isSoundEffect);
 		}
 
 		if (checkPlay == gameSelectScene)
